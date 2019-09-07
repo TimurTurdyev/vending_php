@@ -21,12 +21,25 @@
                 <?php endforeach; ?>
             </ul>
 
+            <div class="alert alert-primary">
+                Внесенная сумма: <strong><?= $credit ?> руб.</strong>
+            </div>
+
+            <?php if ($error): ?>
+            <div class="alert alert-warning"><?= $this->e($error) ?></div>
+            <?php endif; ?>
+
             <div class="row">
                 <div class="col-sm-6 mb-3">
                     <h5>Ваш кошелек <small class="text-muted"><?= $wallet->total() ?> руб.</small></h5>
                     <ul class="list-group">
                         <?php foreach ($wallet as $value => $count): ?>
-                        <li class="list-group-item"><?= $value ?> руб. x <?= $count ?> шт.</li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><?= $value ?> руб. x <?= $count ?> шт.</span>
+                            <form method="post" action="<?= $this->e($base) ?>/insert" class="m-0">
+                                <button type="submit" name="coin" value="<?= $value ?>" class="btn btn-success btn-sm"<?= $count ? '' : ' disabled' ?>>Внести</button>
+                            </form>
+                        </li>
                         <?php endforeach; ?>
                     </ul>
                 </div>
