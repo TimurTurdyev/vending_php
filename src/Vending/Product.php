@@ -60,4 +60,18 @@ final class Product
     {
         return $this->amount;
     }
+
+    public function inStock(): bool
+    {
+        return $this->amount > 0;
+    }
+
+    public function take(): self
+    {
+        if (!$this->inStock()) {
+            throw VendingException::outOfStock($this);
+        }
+
+        return new self($this->id, $this->name, $this->price, $this->amount - 1);
+    }
 }

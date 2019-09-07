@@ -67,6 +67,13 @@ final class VendingController
         });
     }
 
+    public function buy(Request $request): Response
+    {
+        return $this->perform($request, function (Simulation $simulation) use ($request) {
+            return $simulation->buy((int)$request->post('product'));
+        });
+    }
+
     public function refund(Request $request): Response
     {
         return $this->perform($request, function (Simulation $simulation) {
@@ -74,7 +81,7 @@ final class VendingController
         });
     }
 
-    // после POST всегда редирект: обновление страницы не должно повторять действие
+    // после POST всегда редирект: обновление страницы не должно повторять покупку
     private function perform(Request $request, callable $action): Response
     {
         $simulation = $this->repository->load();

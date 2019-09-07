@@ -11,12 +11,17 @@
 <div class="container my-5">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Напитки</h4>
+            <h4 class="card-title">Выберите напиток</h4>
             <ul class="list-group mb-4">
                 <?php foreach ($products as $product): ?>
-                <li class="list-group-item">
-                    <strong><?= $this->e($product->name()) ?></strong>
-                    <span class="text-muted">- <?= $product->price() ?> руб., осталось <?= $product->amount() ?> шт.</span>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                        <strong><?= $this->e($product->name()) ?></strong>
+                        <span class="text-muted">- <?= $product->price() ?> руб., осталось <?= $product->amount() ?> шт.</span>
+                    </span>
+                    <form method="post" action="<?= $this->e($base) ?>/buy" class="m-0">
+                        <button type="submit" name="product" value="<?= $product->id() ?>" class="btn btn-primary btn-sm"<?= $product->inStock() ? '' : ' disabled' ?>>Купить</button>
+                    </form>
                 </li>
                 <?php endforeach; ?>
             </ul>

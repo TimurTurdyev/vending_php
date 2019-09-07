@@ -56,6 +56,28 @@ final class Machine
         $this->credit += $coin;
     }
 
+    public function sell(int $productId): Purchase
+    {
+        if (!isset($this->products[$productId])) {
+            throw VendingException::unknownProduct($productId);
+        }
+
+        $product = $this->products[$productId];
+
+        if (!$product->inStock()) {
+            throw VendingException::outOfStock($product);
+        }
+
+        if ($this->credit < $product->price()) {
+            throw VendingException::insufficientFunds();
+        }
+
+        $change = $this->payOut($this->credit - $product->price());
+        $this->products[$productId] = $product->take();
+
+        return new Purchase($product, $change);
+    }
+
     public function refund(): Purchase
     {
         if ($this->credit === 0) {

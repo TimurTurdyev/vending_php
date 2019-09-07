@@ -38,6 +38,11 @@ final class Simulation
         $this->wallet = $this->wallet->subtract(Coins::one($coin));
     }
 
+    public function buy(int $productId): Purchase
+    {
+        return $this->receive($this->machine->sell($productId));
+    }
+
     public function refund(): Purchase
     {
         return $this->receive($this->machine->refund());
