@@ -33,10 +33,6 @@
                 </form>
             </div>
 
-            <?php if ($error): ?>
-            <div class="alert alert-warning"><?= $this->e($error) ?></div>
-            <?php endif; ?>
-
             <div class="row">
                 <div class="col-sm-6 mb-3">
                     <h5>Ваш кошелек <small class="text-muted"><?= $wallet->total() ?> руб.</small></h5>
@@ -63,5 +59,26 @@
         </div>
     </div>
 </div>
+
+<?php if ($error): ?>
+<div class="modal fade" id="message" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body"><?= $this->e($error) ?></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
+    $('#message').modal('show');
+</script>
+<?php endif; ?>
 </body>
 </html>
