@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Vending;
 
-// покупатель с кошельком у аппарата
+// покупатель с кошельком у аппарата: монеты переходят из кошелька в аппарат и обратно
 final class Simulation
 {
     /** @var Machine */
@@ -36,5 +36,17 @@ final class Simulation
 
         $this->machine->accept($coin);
         $this->wallet = $this->wallet->subtract(Coins::one($coin));
+    }
+
+    public function refund(): Purchase
+    {
+        return $this->receive($this->machine->refund());
+    }
+
+    private function receive(Purchase $purchase): Purchase
+    {
+        $this->wallet = $this->wallet->add($purchase->change());
+
+        return $purchase;
     }
 }

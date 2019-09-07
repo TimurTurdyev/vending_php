@@ -18,6 +18,7 @@ $container->set(Storage::class, function () {
 
 $router = (new Router())
     ->get('/', [VendingController::class, 'index'])
-    ->post('/insert', [VendingController::class, 'insert']);
+    ->post('/insert', [VendingController::class, 'insert'])
+    ->post('/refund', [VendingController::class, 'refund']);
 
 (new Kernel($container, $router))->handle(Request::fromGlobals())->send();

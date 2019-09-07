@@ -21,8 +21,11 @@
                 <?php endforeach; ?>
             </ul>
 
-            <div class="alert alert-primary">
-                Внесенная сумма: <strong><?= $credit ?> руб.</strong>
+            <div class="alert alert-primary d-flex justify-content-between align-items-center">
+                <span>Внесенная сумма: <strong><?= $credit ?> руб.</strong></span>
+                <form method="post" action="<?= $this->e($base) ?>/refund" class="m-0">
+                    <button type="submit" class="btn btn-outline-primary btn-sm"<?= $credit ? '' : ' disabled' ?>>Сдача</button>
+                </form>
             </div>
 
             <?php if ($error): ?>

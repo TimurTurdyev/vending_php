@@ -16,4 +16,14 @@ final class VendingException extends DomainException
     {
         return new self(sprintf('В кошельке нет монет по %d руб.', $value));
     }
+
+    public static function nothingToRefund(): self
+    {
+        return new self('Внесенная сумма равна нулю');
+    }
+
+    public static function cannotMakeChange(int $amount): self
+    {
+        return new self(sprintf('В аппарате не хватает монет, чтобы выдать сдачу %d руб.', $amount));
+    }
 }

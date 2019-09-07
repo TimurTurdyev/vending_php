@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Vending;
 
 use Framework\Storage\Storage;
+use Vending\Change\ChangeMaker;
 
 final class SimulationRepository
 {
@@ -15,10 +16,14 @@ final class SimulationRepository
     /** @var JsonFixtures */
     private $fixtures;
 
-    public function __construct(Storage $storage, JsonFixtures $fixtures)
+    /** @var ChangeMaker */
+    private $changeMaker;
+
+    public function __construct(Storage $storage, JsonFixtures $fixtures, ChangeMaker $changeMaker)
     {
         $this->storage = $storage;
         $this->fixtures = $fixtures;
+        $this->changeMaker = $changeMaker;
     }
 
     public function load(): Simulation
@@ -27,7 +32,7 @@ final class SimulationRepository
 
         if (!is_array($state)) {
             return new Simulation(
-                new Machine($this->fixtures->products(), $this->fixtures->machine(), 0),
+                new Machine($this->fixtures->products(), $this->fixtures->machine(), 0, $this->changeMaker),
                 $this->fixtures->wallet()
             );
         }
@@ -36,7 +41,8 @@ final class SimulationRepository
             new Machine(
                 array_map([Product::class, 'fromArray'], $state['products']),
                 new Coins($state['bank']),
-                (int)$state['credit']
+                (int)$state['credit'],
+                $this->changeMaker
             ),
             new Coins($state['wallet'])
         );

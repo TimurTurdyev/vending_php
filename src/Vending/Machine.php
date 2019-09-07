@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Vending;
 
+use Vending\Change\ChangeMaker;
+
 final class Machine
 {
     /** @var Product[] номер => напиток */
@@ -14,7 +16,10 @@ final class Machine
     /** @var int */
     private $credit;
 
-    public function __construct(array $products, Coins $bank, int $credit)
+    /** @var ChangeMaker */
+    private $changeMaker;
+
+    public function __construct(array $products, Coins $bank, int $credit, ChangeMaker $changeMaker)
     {
         foreach ($products as $product) {
             $this->products[$product->id()] = $product;
@@ -22,6 +27,7 @@ final class Machine
 
         $this->bank = $bank;
         $this->credit = $credit;
+        $this->changeMaker = $changeMaker;
     }
 
     /** @return Product[] */
@@ -48,5 +54,28 @@ final class Machine
 
         $this->bank = $this->bank->add(Coins::one($coin));
         $this->credit += $coin;
+    }
+
+    public function refund(): Purchase
+    {
+        if ($this->credit === 0) {
+            throw VendingException::nothingToRefund();
+        }
+
+        return new Purchase(null, $this->payOut($this->credit));
+    }
+
+    private function payOut(int $amount): Coins
+    {
+        $change = $this->changeMaker->make($amount, $this->bank);
+
+        if ($change === null) {
+            throw VendingException::cannotMakeChange($amount);
+        }
+
+        $this->bank = $this->bank->subtract($change);
+        $this->credit = 0;
+
+        return $change;
     }
 }
