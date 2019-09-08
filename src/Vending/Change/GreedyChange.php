@@ -5,7 +5,7 @@ namespace Vending\Change;
 
 use Vending\Coins;
 
-// сначала самые крупные монеты
+// берет самые крупные монеты; при неполном запасе может не найти сдачу, которая есть
 final class GreedyChange implements ChangeMaker
 {
     public function make(int $amount, Coins $available): ?Coins
