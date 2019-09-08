@@ -13,9 +13,14 @@ final class Output
         $this->stream = $stream;
     }
 
+    public function write(string $text): void
+    {
+        fwrite($this->stream, $text);
+    }
+
     public function line(string $text = ''): void
     {
-        fwrite($this->stream, $text . PHP_EOL);
+        $this->write($text . PHP_EOL);
     }
 
     public function error(string $text): void

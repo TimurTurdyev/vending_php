@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Console\BuyCommand;
 use App\Console\InsertCommand;
 use App\Console\RefundCommand;
+use App\Console\ShellCommand;
 use App\Console\StatusCommand;
 use Framework\Console\Application;
 use Framework\Console\Output;
@@ -24,5 +25,7 @@ $application = new Application('Vending Machine', new Output(STDOUT));
 foreach ([StatusCommand::class, InsertCommand::class, BuyCommand::class, RefundCommand::class] as $command) {
     $application->add($container->get($command));
 }
+
+$application->add(new ShellCommand($application));
 
 exit($application->run(array_slice($argv, 1)));
