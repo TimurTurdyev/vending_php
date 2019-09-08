@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Console\BuyCommand;
 use App\Console\InsertCommand;
 use App\Console\RefundCommand;
+use App\Console\ResetCommand;
 use App\Console\ShellCommand;
 use App\Console\StatusCommand;
 use Framework\Console\Application;
@@ -22,7 +23,7 @@ $container->set(Storage::class, function (Container $container) {
 
 $application = new Application('Vending Machine', new Output(STDOUT));
 
-foreach ([StatusCommand::class, InsertCommand::class, BuyCommand::class, RefundCommand::class] as $command) {
+foreach ([StatusCommand::class, InsertCommand::class, BuyCommand::class, RefundCommand::class, ResetCommand::class] as $command) {
     $application->add($container->get($command));
 }
 

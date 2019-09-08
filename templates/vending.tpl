@@ -56,6 +56,10 @@
                     </ul>
                 </div>
             </div>
+
+            <form method="post" action="<?= $this->e($base) ?>/reset" class="text-right m-0">
+                <button type="submit" class="btn btn-link btn-sm text-muted">Сбросить аппарат</button>
+            </form>
         </div>
     </div>
 </div>

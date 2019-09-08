@@ -81,6 +81,13 @@ final class VendingController
         });
     }
 
+    public function reset(Request $request): Response
+    {
+        $this->repository->reset();
+
+        return Response::redirect($request->basePath() . '/');
+    }
+
     // после POST всегда редирект: обновление страницы не должно повторять покупку
     private function perform(Request $request, callable $action): Response
     {

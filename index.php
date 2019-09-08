@@ -20,6 +20,7 @@ $router = (new Router())
     ->get('/', [VendingController::class, 'index'])
     ->post('/insert', [VendingController::class, 'insert'])
     ->post('/buy', [VendingController::class, 'buy'])
-    ->post('/refund', [VendingController::class, 'refund']);
+    ->post('/refund', [VendingController::class, 'refund'])
+    ->post('/reset', [VendingController::class, 'reset']);
 
 (new Kernel($container, $router))->handle(Request::fromGlobals())->send();

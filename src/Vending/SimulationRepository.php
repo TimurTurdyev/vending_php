@@ -61,4 +61,9 @@ final class SimulationRepository
             }, $machine->products())),
         ]);
     }
+
+    public function reset(): void
+    {
+        $this->storage->delete(self::KEY);
+    }
 }
