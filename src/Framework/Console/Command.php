@@ -1,0 +1,13 @@
+<?php
+declare(strict_types=1);
+
+namespace Framework\Console;
+
+interface Command
+{
+    public function name(): string;
+
+    public function description(): string;
+
+    public function run(array $arguments, Output $output): int;
+}
