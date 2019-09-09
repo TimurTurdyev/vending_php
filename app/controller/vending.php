@@ -90,7 +90,7 @@ class VendingController
         }
 
         // echo '<div style="background: #fff;"><pre>';
-        // var_dump($test);
+        // var_dump($this->how_many_coins(113));
         // echo '</pre></div>';
 
         if (isset($_POST['success']) && $data['step']) {
@@ -118,6 +118,8 @@ class VendingController
         $flag = true;
 
         while ($flag) {
+            // echo $n;
+            // echo '<br>';
             switch (true) {
                 case $n >= 10:
                     $a = (int) floor($n / 10);
@@ -137,12 +139,12 @@ class VendingController
                     $n = 0;
                     break;
                 case $n == 3:
-                    $arr['2'] = 2;
+                    $arr['2'] = 1;
                     $arr['1'] = 1;
                     $n = 0;
                     break;
                 case $n == 2:
-                    $arr['2'] = 2;
+                    $arr['2'] = 1;
                     $n = 0;
                     break;
                 case $n == 1:

@@ -146,6 +146,7 @@
                 <?php } ?>
                 <?php } ?>
                 <h4 class="card-title text-center">Хорошего дня!</h4>
+                <button class="btn btn-primary btn-block" onclick="location.href = ''">Назад</button>
             </div>
         </div>
     </div>
