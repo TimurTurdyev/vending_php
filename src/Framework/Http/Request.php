@@ -17,6 +17,9 @@ final class Request
     /** @var array */
     private $post;
 
+    /** @var array */
+    private $attributes = [];
+
     public function __construct(string $method, string $uri, string $scriptName = '/index.php', array $post = [])
     {
         $this->method = strtoupper($method);
@@ -65,5 +68,18 @@ final class Request
     public function post(string $key, $default = null)
     {
         return $this->post[$key] ?? $default;
+    }
+
+    public function withAttributes(array $attributes): self
+    {
+        $request = clone $this;
+        $request->attributes = $attributes + $this->attributes;
+
+        return $request;
+    }
+
+    public function attribute(string $name, $default = null)
+    {
+        return $this->attributes[$name] ?? $default;
     }
 }

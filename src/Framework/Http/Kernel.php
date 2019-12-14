@@ -21,13 +21,23 @@ final class Kernel
 
     public function handle(Request $request): Response
     {
-        $handler = $this->router->match($request->method(), $request->path());
+        try {
+            return $this->dispatch($request);
+        } catch (HttpException $e) {
+            return new Response($e->getMessage(), $e->status());
+        }
+    }
 
-        if ($handler === null) {
-            return new Response('Страница не найдена', 404);
+    private function dispatch(Request $request): Response
+    {
+        $match = $this->router->match($request->method(), $request->path());
+
+        if ($match === null) {
+            throw HttpException::notFound();
         }
 
-        [$controller, $action] = $handler;
+        [[$controller, $action], $parameters] = $match;
+        $request = $request->withAttributes($parameters);
 
         return $this->container->get($controller)->$action($request);
     }
