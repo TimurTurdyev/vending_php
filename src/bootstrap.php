@@ -1,12 +1,15 @@
 <?php
 declare(strict_types=1);
 
+use Framework\Clock\Clock;
+use Framework\Clock\SystemClock;
 use Framework\Container;
+use Framework\Storage\JsonFile;
 use Framework\View\View;
-use Vending\Change\ChangeMaker;
-use Vending\Change\GreedyChange;
-use Vending\Change\OptimalChange;
-use Vending\JsonFixtures;
+use Vending\Fixtures;
+use Vending\Money\ChangeMaker;
+use Vending\Money\GreedyChange;
+use Vending\Money\OptimalChange;
 
 require_once __DIR__ . '/autoload.php';
 
@@ -16,8 +19,16 @@ $container->set('config', function () {
     return require dirname(__DIR__) . '/config.php';
 });
 
-$container->set(JsonFixtures::class, function (Container $container) {
-    return new JsonFixtures($container->get('config')['data']);
+$container->set(Clock::class, function (Container $container) {
+    return new SystemClock($container->get('config')['timezone']);
+});
+
+$container->set(JsonFile::class, function (Container $container) {
+    return new JsonFile($container->get('config')['state']);
+});
+
+$container->set(Fixtures::class, function (Container $container) {
+    return new Fixtures($container->get('config')['data']);
 });
 
 $container->set(ChangeMaker::class, function (Container $container) {

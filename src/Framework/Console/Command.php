@@ -9,5 +9,5 @@ interface Command
 
     public function description(): string;
 
-    public function run(array $arguments, Output $output): int;
+    public function run(Input $input, Output $output): int;
 }

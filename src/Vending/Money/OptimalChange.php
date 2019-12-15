@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Vending\Change;
-
-use Vending\Coins;
+namespace Vending\Money;
 
 // наименьшее число монет с учетом запаса: динамика по суммам, номиналы добавляются по одному
 final class OptimalChange implements ChangeMaker

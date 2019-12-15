@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace App\Console;
 
+use DateTimeImmutable;
+use Framework\Console\Input;
 use Framework\Console\Output;
-use InvalidArgumentException;
-use Vending\Simulation;
+use Vending\World;
 
-final class InsertCommand extends VendingCommand
+final class InsertCommand extends WorldCommand
 {
     public function name(): string
     {
@@ -16,19 +17,20 @@ final class InsertCommand extends VendingCommand
 
     public function description(): string
     {
-        return 'внести монеты: insert 10 5 2';
+        return 'внести монеты: insert 10 5 0.50';
     }
 
-    protected function handle(Simulation $simulation, array $arguments, Output $output): void
+    protected function handle(World $world, Input $input, Output $output, DateTimeImmutable $now): void
     {
-        if (!$arguments) {
-            throw new InvalidArgumentException('укажите монеты, например: insert 10 5 2');
+        $this->argument($input, 0, 'insert 10 5 2');
+
+        $machine = $this->machine($world, $input);
+        $customer = $this->customer($world);
+
+        foreach ($input->arguments() as $coin) {
+            $machine->insert($customer, $machine->currency()->parse($coin));
         }
 
-        foreach ($arguments as $coin) {
-            $simulation->insert((int)$coin);
-        }
-
-        $output->line(sprintf('Внесено: %d руб.', $simulation->machine()->credit()));
+        $output->line('Внесено: ' . $machine->currency()->format($machine->cash()->credit()));
     }
 }

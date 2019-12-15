@@ -5,6 +5,7 @@ namespace App\Console;
 
 use Framework\Console\Application;
 use Framework\Console\Command;
+use Framework\Console\Input;
 use Framework\Console\Output;
 
 final class ShellCommand implements Command
@@ -30,12 +31,19 @@ final class ShellCommand implements Command
 
     public function description(): string
     {
-        return 'интерактивный режим, выход - exit';
+        return 'интерактивный режим: shell --machine=snacks, выход - exit';
     }
 
-    public function run(array $arguments, Output $output): int
+    public function run(Input $input, Output $output): int
     {
-        $output->line('Команды вводятся без "bin/vending": status, insert 10, buy 2, refund. Выход - exit');
+        $output->line('Команды вводятся без "bin/vending": status, insert 10, buy A2, refund. Выход - exit');
+
+        // опции запуска действуют на каждую команду, пока их не переопределить в строке
+        $defaults = [];
+
+        foreach ($input->options() as $name => $value) {
+            $defaults[] = $value === true ? '--' . $name : '--' . $name . '=' . $value;
+        }
 
         while (($line = $this->read($output)) !== null) {
             $words = preg_split('/\s+/', trim($line), -1, PREG_SPLIT_NO_EMPTY);
@@ -53,7 +61,7 @@ final class ShellCommand implements Command
                 continue;
             }
 
-            $this->application->run($words);
+            $this->application->run(new Input(array_merge($defaults, $words)));
             $output->line();
         }
 

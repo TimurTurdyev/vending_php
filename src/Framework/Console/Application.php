@@ -27,12 +27,12 @@ final class Application
         return $this;
     }
 
-    public function run(array $arguments): int
+    public function run(Input $input): int
     {
-        $name = array_shift($arguments) ?? 'help';
+        $name = $input->argument(0, 'help');
 
         if (isset($this->commands[$name])) {
-            return $this->commands[$name]->run($arguments, $this->output);
+            return $this->commands[$name]->run($input->shift(), $this->output);
         }
 
         if ($name !== 'help') {

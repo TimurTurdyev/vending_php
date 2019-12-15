@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Vending\Change;
-
-use Vending\Coins;
+namespace Vending\Money;
 
 // берет самые крупные монеты; при неполном запасе может не найти сдачу, которая есть
 final class GreedyChange implements ChangeMaker

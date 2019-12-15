@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace App\Console;
 
+use DateTimeImmutable;
+use Framework\Console\Input;
 use Framework\Console\Output;
-use InvalidArgumentException;
-use Vending\Simulation;
+use Vending\World;
 
-final class BuyCommand extends VendingCommand
+final class BuyCommand extends WorldCommand
 {
     public function name(): string
     {
@@ -16,19 +17,18 @@ final class BuyCommand extends VendingCommand
 
     public function description(): string
     {
-        return 'купить напиток по номеру: buy 2';
+        return 'купить товар из ячейки: buy A2';
     }
 
-    protected function handle(Simulation $simulation, array $arguments, Output $output): void
+    protected function handle(World $world, Input $input, Output $output, DateTimeImmutable $now): void
     {
-        if (!isset($arguments[0])) {
-            throw new InvalidArgumentException('укажите номер напитка, например: buy 2');
-        }
+        $machine = $this->machine($world, $input);
+        $currency = $machine->currency();
 
-        $purchase = $simulation->buy((int)$arguments[0]);
-        $product = $purchase->product();
+        $purchase = $machine->buy($this->customer($world), $this->argument($input, 0, 'buy A2'), $now);
 
-        $output->line(sprintf('Ваш напиток: %s за %d руб.', $product->name(), $product->price()));
-        $output->line('Сдача: ' . $this->describe($purchase->change()));
+        $output->line(sprintf('Выдано: %s за %s', $purchase->product()->name(), $currency->format($purchase->product()->price())));
+
+        $output->line('Сдача: ' . $this->describe($purchase->change(), $currency));
     }
 }

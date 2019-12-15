@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace Vending;
 
-// итог операции: выданный напиток (при возврате денег его нет) и сдача
+use Vending\Catalog\Product;
+use Vending\Money\Coins;
+
+// что получил покупатель: товар (при возврате денег его нет) и сдачу
 final class Purchase
 {
     /** @var Product|null */

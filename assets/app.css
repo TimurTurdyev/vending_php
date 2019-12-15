@@ -1,0 +1,59 @@
+.vm-showcase {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-gap: 10px;
+}
+
+.vm-slot {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.vm-slot--empty {
+    opacity: .5;
+}
+
+.vm-slot__code {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.vm-slot__name {
+    padding-right: 20px;
+    font-weight: 600;
+}
+
+.vm-slot__price {
+    font-size: 1.1rem;
+}
+
+.vm-slot__buy {
+    margin-top: auto;
+    padding-top: 8px;
+}
+
+.vm-display__credit {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.vm-coins {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.vm-coin {
+    margin: 0 6px 6px 0;
+}
+
+.vm-tray__product {
+    font-weight: 700;
+}

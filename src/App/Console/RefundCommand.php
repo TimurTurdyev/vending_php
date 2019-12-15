@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace App\Console;
 
+use DateTimeImmutable;
+use Framework\Console\Input;
 use Framework\Console\Output;
-use Vending\Simulation;
+use Vending\World;
 
-final class RefundCommand extends VendingCommand
+final class RefundCommand extends WorldCommand
 {
     public function name(): string
     {
@@ -18,8 +20,11 @@ final class RefundCommand extends VendingCommand
         return 'вернуть внесенную сумму';
     }
 
-    protected function handle(Simulation $simulation, array $arguments, Output $output): void
+    protected function handle(World $world, Input $input, Output $output, DateTimeImmutable $now): void
     {
-        $output->line('Сдача: ' . $this->describe($simulation->refund()->change()));
+        $machine = $this->machine($world, $input);
+        $purchase = $machine->refund($this->customer($world));
+
+        $output->line('Сдача: ' . $this->describe($purchase->change(), $machine->currency()));
     }
 }

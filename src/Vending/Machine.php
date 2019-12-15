@@ -3,31 +3,75 @@ declare(strict_types=1);
 
 namespace Vending;
 
-use Vending\Change\ChangeMaker;
+use DateTimeImmutable;
+use Vending\Catalog\Product;
+use Vending\Catalog\Slot;
+use Vending\Money\CashBox;
+use Vending\Money\Currency;
+use Vending\Sales\Journal;
+use Vending\Sales\Sale;
 
 final class Machine
 {
-    /** @var Product[] номер => напиток */
+    /** @var MachineInfo */
+    private $info;
+
+    /** @var Product[] артикул => товар */
     private $products = [];
 
-    /** @var Coins монеты для сдачи вместе с внесенными */
-    private $bank;
+    /** @var Slot[] код => ячейка */
+    private $slots = [];
 
-    /** @var int */
-    private $credit;
+    /** @var CashBox */
+    private $cash;
 
-    /** @var ChangeMaker */
-    private $changeMaker;
+    /** @var Journal */
+    private $journal;
 
-    public function __construct(array $products, Coins $bank, int $credit, ChangeMaker $changeMaker)
-    {
+    public function __construct(
+        MachineInfo $info,
+        array $products,
+        array $slots,
+        CashBox $cash,
+        Journal $journal
+    ) {
+        $this->info = $info;
+
         foreach ($products as $product) {
-            $this->products[$product->id()] = $product;
+            $this->products[$product->sku()] = $product;
         }
 
-        $this->bank = $bank;
-        $this->credit = $credit;
-        $this->changeMaker = $changeMaker;
+        foreach ($slots as $slot) {
+            $this->slots[$slot->code()] = $slot;
+        }
+
+        $this->cash = $cash;
+        $this->journal = $journal;
+    }
+
+    public function id(): string
+    {
+        return $this->info->id();
+    }
+
+    public function info(): MachineInfo
+    {
+        return $this->info;
+    }
+
+    public function currency(): Currency
+    {
+        return $this->cash->currency();
+    }
+
+    public function cash(): CashBox
+    {
+        return $this->cash;
+    }
+
+    public function journal(): Journal
+    {
+        return $this->journal;
     }
 
     /** @return Product[] */
@@ -36,68 +80,65 @@ final class Machine
         return $this->products;
     }
 
-    public function bank(): Coins
+    public function product(string $sku): Product
     {
-        return $this->bank;
+        if (!isset($this->products[$sku])) {
+            throw VendingException::unknownProduct($sku);
+        }
+
+        return $this->products[$sku];
     }
 
-    public function credit(): int
+    /** @return Slot[] */
+    public function slots(): array
     {
-        return $this->credit;
+        return $this->slots;
     }
 
-    public function accept(int $coin): void
+    public function slot(string $code): Slot
     {
-        if (!$this->bank->accepts($coin)) {
-            throw VendingException::unknownCoin($coin);
+        $code = strtoupper($code);
+
+        if (!isset($this->slots[$code])) {
+            throw VendingException::unknownSlot($code);
         }
 
-        $this->bank = $this->bank->add(Coins::one($coin));
-        $this->credit += $coin;
+        return $this->slots[$code];
     }
 
-    public function sell(int $productId): Purchase
+    public function insert(Customer $customer, int $coin): void
     {
-        if (!isset($this->products[$productId])) {
-            throw VendingException::unknownProduct($productId);
+        if (!$this->cash->accepts($coin)) {
+            throw VendingException::unknownCoin($this->currency()->format($coin));
         }
 
-        $product = $this->products[$productId];
+        $customer->spend($this->currency(), $coin);
+        $this->cash->insert($coin);
+    }
 
-        if (!$product->inStock()) {
-            throw VendingException::outOfStock($product);
+    public function buy(Customer $customer, string $code, DateTimeImmutable $now): Purchase
+    {
+        $slot = $this->slot($code);
+
+        if (!$slot->inStock()) {
+            throw VendingException::emptySlot($slot->code());
         }
 
-        if ($this->credit < $product->price()) {
-            throw VendingException::insufficientFunds();
-        }
+        $product = $this->product($slot->sku());
+        $change = $this->cash->pay($product->price());
+        $slot->take();
 
-        $change = $this->payOut($this->credit - $product->price());
-        $this->products[$productId] = $product->take();
+        $this->journal->record(new Sale($now, $customer->id(), $product->sku(), $product->name(), $product->price()));
+        $customer->receive($this->currency(), $change);
 
         return new Purchase($product, $change);
     }
 
-    public function refund(): Purchase
+    public function refund(Customer $customer): Purchase
     {
-        if ($this->credit === 0) {
-            throw VendingException::nothingToRefund();
-        }
+        $change = $this->cash->refund();
+        $customer->receive($this->currency(), $change);
 
-        return new Purchase(null, $this->payOut($this->credit));
-    }
-
-    private function payOut(int $amount): Coins
-    {
-        $change = $this->changeMaker->make($amount, $this->bank);
-
-        if ($change === null) {
-            throw VendingException::cannotMakeChange($amount);
-        }
-
-        $this->bank = $this->bank->subtract($change);
-        $this->credit = 0;
-
-        return $change;
+        return new Purchase(null, $change);
     }
 }

@@ -3,30 +3,40 @@
 declare(strict_types=1);
 
 use App\Console\BuyCommand;
+use App\Console\Defaults;
 use App\Console\InsertCommand;
 use App\Console\RefundCommand;
 use App\Console\ResetCommand;
 use App\Console\ShellCommand;
 use App\Console\StatusCommand;
 use Framework\Console\Application;
+use Framework\Console\Input;
 use Framework\Console\Output;
 use Framework\Container;
-use Framework\Storage\FileStorage;
-use Framework\Storage\Storage;
 
 /** @var Container $container */
 $container = require dirname(__DIR__) . '/src/bootstrap.php';
 
-$container->set(Storage::class, function (Container $container) {
-    return new FileStorage($container->get('config')['cli_storage']);
+$container->set(Defaults::class, function (Container $container) {
+    $cli = $container->get('config')['cli'];
+
+    return new Defaults($cli['customer'], $cli['machine']);
 });
 
 $application = new Application('Vending Machine', new Output(STDOUT));
 
-foreach ([StatusCommand::class, InsertCommand::class, BuyCommand::class, RefundCommand::class, ResetCommand::class] as $command) {
+$commands = [
+    StatusCommand::class,
+    InsertCommand::class,
+    BuyCommand::class,
+    RefundCommand::class,
+    ResetCommand::class,
+];
+
+foreach ($commands as $command) {
     $application->add($container->get($command));
 }
 
 $application->add(new ShellCommand($application));
 
-exit($application->run(array_slice($argv, 1)));
+exit($application->run(new Input(array_slice($argv, 1))));

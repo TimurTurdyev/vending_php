@@ -5,6 +5,7 @@ namespace Vending;
 
 use DomainException;
 
+// сообщения сразу для покупателя: их показывают и веб, и консоль
 final class VendingException extends DomainException
 {
     public static function insufficientFunds(): self
@@ -12,24 +13,9 @@ final class VendingException extends DomainException
         return new self('Недостаточно средств');
     }
 
-    public static function outOfStock(Product $product): self
+    public static function cannotMakeChange(string $amount): self
     {
-        return new self(sprintf('%s закончился', $product->name()));
-    }
-
-    public static function unknownProduct(int $id): self
-    {
-        return new self(sprintf('Напитка с номером %d нет', $id));
-    }
-
-    public static function unknownCoin(int $value): self
-    {
-        return new self(sprintf('Аппарат не принимает монеты по %d руб.', $value));
-    }
-
-    public static function emptyWallet(int $value): self
-    {
-        return new self(sprintf('В кошельке нет монет по %d руб.', $value));
+        return new self(sprintf('В аппарате не хватает монет, чтобы выдать %s', $amount));
     }
 
     public static function nothingToRefund(): self
@@ -37,8 +23,38 @@ final class VendingException extends DomainException
         return new self('Внесенная сумма равна нулю');
     }
 
-    public static function cannotMakeChange(int $amount): self
+    public static function unknownCoin(string $coin): self
     {
-        return new self(sprintf('В аппарате не хватает монет, чтобы выдать сдачу %d руб.', $amount));
+        return new self(sprintf('Аппарат не принимает монеты %s', $coin));
+    }
+
+    public static function emptyWallet(string $coin): self
+    {
+        return new self(sprintf('В кошельке нет монет %s', $coin));
+    }
+
+    public static function unknownSlot(string $code): self
+    {
+        return new self(sprintf('Ячейки %s нет', $code));
+    }
+
+    public static function emptySlot(string $code): self
+    {
+        return new self(sprintf('Ячейка %s пуста', $code));
+    }
+
+    public static function unknownProduct(string $sku): self
+    {
+        return new self(sprintf('Товара "%s" нет в каталоге аппарата', $sku));
+    }
+
+    public static function unknownMachine(string $id): self
+    {
+        return new self(sprintf('Аппарата "%s" нет', $id));
+    }
+
+    public static function unknownCustomer(string $id): self
+    {
+        return new self(sprintf('Покупателя "%s" нет', $id));
     }
 }

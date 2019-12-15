@@ -4,17 +4,18 @@ declare(strict_types=1);
 namespace App\Console;
 
 use Framework\Console\Command;
+use Framework\Console\Input;
 use Framework\Console\Output;
-use Vending\SimulationRepository;
+use Vending\WorldRepository;
 
 final class ResetCommand implements Command
 {
-    /** @var SimulationRepository */
-    private $repository;
+    /** @var WorldRepository */
+    private $world;
 
-    public function __construct(SimulationRepository $repository)
+    public function __construct(WorldRepository $world)
     {
-        $this->repository = $repository;
+        $this->world = $world;
     }
 
     public function name(): string
@@ -24,13 +25,13 @@ final class ResetCommand implements Command
 
     public function description(): string
     {
-        return 'вернуть аппарат и кошелек к начальным данным';
+        return 'вернуть все аппараты и покупателей к начальным данным';
     }
 
-    public function run(array $arguments, Output $output): int
+    public function run(Input $input, Output $output): int
     {
-        $this->repository->reset();
-        $output->line('Аппарат сброшен к начальным данным');
+        $this->world->reset();
+        $output->line('Все аппараты и покупатели сброшены');
 
         return 0;
     }

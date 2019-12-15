@@ -2,9 +2,9 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use Vending\Change\GreedyChange;
-use Vending\Change\OptimalChange;
-use Vending\Coins;
+use Vending\Money\Coins;
+use Vending\Money\GreedyChange;
+use Vending\Money\OptimalChange;
 
 final class ChangeTest extends TestCase
 {
