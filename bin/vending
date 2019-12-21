@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Console\BuyCommand;
 use App\Console\Defaults;
 use App\Console\InsertCommand;
+use App\Console\MachinesCommand;
 use App\Console\RefundCommand;
 use App\Console\ResetCommand;
 use App\Console\ShellCommand;
@@ -26,6 +27,7 @@ $container->set(Defaults::class, function (Container $container) {
 $application = new Application('Vending Machine', new Output(STDOUT));
 
 $commands = [
+    MachinesCommand::class,
     StatusCommand::class,
     InsertCommand::class,
     BuyCommand::class,

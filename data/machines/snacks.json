@@ -1,0 +1,82 @@
+{
+  "id": "snacks",
+  "name": "Снеки и напитки",
+  "location": "Бизнес-центр, 1 этаж, у лифтов",
+  "currency": {
+    "code": "RUB",
+    "symbol": "руб.",
+    "digits": 2
+  },
+  "cash": {
+    "coins": {
+      "100": 60,
+      "200": 60,
+      "500": 40,
+      "1000": 40
+    }
+  },
+  "catalog": [
+    {
+      "sku": "chips",
+      "name": "Чипсы",
+      "category": "snack",
+      "price": 6500
+    },
+    {
+      "sku": "bar",
+      "name": "Шоколадный батончик",
+      "category": "snack",
+      "price": 4500
+    },
+    {
+      "sku": "nuts",
+      "name": "Орешки",
+      "category": "snack",
+      "price": 5500
+    },
+    {
+      "sku": "water",
+      "name": "Вода",
+      "category": "drink",
+      "price": 4000
+    },
+    {
+      "sku": "soda",
+      "name": "Газировка",
+      "category": "drink",
+      "price": 6000
+    }
+  ],
+  "slots": [
+    {
+      "code": "A1",
+      "capacity": 12,
+      "sku": "chips",
+      "quantity": 8
+    },
+    {
+      "code": "A2",
+      "capacity": 12,
+      "sku": "bar",
+      "quantity": 12
+    },
+    {
+      "code": "A3",
+      "capacity": 12,
+      "sku": "nuts",
+      "quantity": 6
+    },
+    {
+      "code": "B1",
+      "capacity": 10,
+      "sku": "water",
+      "quantity": 10
+    },
+    {
+      "code": "B2",
+      "capacity": 10,
+      "sku": "soda",
+      "quantity": 7
+    }
+  ]
+}

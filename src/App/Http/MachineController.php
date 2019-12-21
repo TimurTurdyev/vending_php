@@ -16,12 +16,11 @@ use Vending\World;
 
 final class MachineController extends Controller
 {
-    // аппарат пока один, главная сразу ведет к нему
     public function index(Request $request): Response
     {
-        $machines = $this->world()->machines();
+        $world = $this->world();
 
-        return $this->redirect($request, '/machines/' . key($machines));
+        return $this->page($request, $world, 'machines.tpl');
     }
 
     public function show(Request $request): Response
