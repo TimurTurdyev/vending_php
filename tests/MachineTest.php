@@ -38,4 +38,24 @@ final class MachineTest extends VendingTestCase
         $this->assertSame(1, $machine->slot('A2')->quantity());
         $this->assertSame([], $machine->journal()->all());
     }
+
+    public function testChangeLimitAndExactChangeMode(): void
+    {
+        $limited = $this->machine(['cash' => ['coins' => [100 => 10, 200 => 10, 500 => 10, 1000 => 10], 'max_change' => 500]]);
+        $customer = $this->customer();
+        $this->insert($limited, $customer, [1000, 1000]);
+
+        try {
+            $limited->buy($customer, 'A1', $this->time('12:00'));
+            $this->fail('change over limit');
+        } catch (VendingException $e) {
+            $this->assertStringContainsString('не больше 5 руб.', $e->getMessage());
+        }
+
+        $exact = $this->machine(['cash' => ['coins' => [100 => 2, 200 => 10, 500 => 10, 1000 => 10], 'reserve' => 5]]);
+        $this->assertTrue($exact->cash()->exactChangeOnly());
+
+        $this->insert($exact, $customer, [1000, 200, 100]);
+        $this->assertTrue($exact->buy($customer, 'A1', $this->time('12:00'))->change()->isEmpty());
+    }
 }

@@ -6,6 +6,7 @@ namespace Vending;
 use Vending\Catalog\Product;
 use Vending\Catalog\Slot;
 use Vending\Money\CashBox;
+use Vending\Money\CashPolicy;
 use Vending\Money\ChangeMaker;
 use Vending\Money\Coins;
 use Vending\Money\Currency;
@@ -37,7 +38,8 @@ final class Mapper
                 Currency::fromArray($data['currency']),
                 new Coins($data['cash']['coins']),
                 (int)($data['cash']['credit'] ?? 0),
-                $this->changeMaker
+                $this->changeMaker,
+                CashPolicy::fromArray($data['cash'])
             ),
             new Journal(array_map([Sale::class, 'fromArray'], $data['sales'] ?? []))
         );
@@ -53,7 +55,7 @@ final class Mapper
             'name' => $info->name(),
             'location' => $info->location(),
             'currency' => $machine->currency()->toArray(),
-            'cash' => ['coins' => $cash->coins()->toArray(), 'credit' => $cash->credit()],
+            'cash' => ['coins' => $cash->coins()->toArray(), 'credit' => $cash->credit()] + $cash->policy()->toArray(),
             'catalog' => array_values(array_map(function (Product $product) {
                 return $product->toArray();
             }, $machine->products())),

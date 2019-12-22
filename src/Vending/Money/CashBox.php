@@ -19,12 +19,16 @@ final class CashBox
     /** @var ChangeMaker */
     private $changeMaker;
 
-    public function __construct(Currency $currency, Coins $coins, int $credit, ChangeMaker $changeMaker)
+    /** @var CashPolicy */
+    private $policy;
+
+    public function __construct(Currency $currency, Coins $coins, int $credit, ChangeMaker $changeMaker, CashPolicy $policy)
     {
         $this->currency = $currency;
         $this->coins = $coins;
         $this->credit = $credit;
         $this->changeMaker = $changeMaker;
+        $this->policy = $policy;
     }
 
     public function currency(): Currency
@@ -40,6 +44,11 @@ final class CashBox
     public function credit(): int
     {
         return $this->credit;
+    }
+
+    public function policy(): CashPolicy
+    {
+        return $this->policy;
     }
 
     public function accepts(int $coin): bool
@@ -63,7 +72,17 @@ final class CashBox
             throw VendingException::insufficientFunds();
         }
 
-        return $this->payOut($this->credit - $price);
+        $change = $this->credit - $price;
+
+        if ($change > 0 && $this->exactChangeOnly()) {
+            throw VendingException::exactChangeOnly();
+        }
+
+        if ($this->policy->maxChange() !== null && $change > $this->policy->maxChange()) {
+            throw VendingException::changeLimit($this->currency->format($this->policy->maxChange()));
+        }
+
+        return $this->payOut($change);
     }
 
     public function refund(): Coins
@@ -73,6 +92,22 @@ final class CashBox
         }
 
         return $this->payOut($this->credit);
+    }
+
+    // мелочь почти кончилась: какой-то номинал, кроме самого крупного, ниже запаса
+    public function exactChangeOnly(): bool
+    {
+        if ($this->policy->reserve() === 0) {
+            return false;
+        }
+
+        foreach (array_slice($this->coins->denominations(), 1) as $value) {
+            if ($this->coins->of($value) < $this->policy->reserve()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function payOut(int $amount): Coins

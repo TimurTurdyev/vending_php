@@ -13,6 +13,16 @@ final class VendingException extends DomainException
         return new self('Недостаточно средств');
     }
 
+    public static function exactChangeOnly(): self
+    {
+        return new self('В аппарате мало мелочи, он продает только без сдачи');
+    }
+
+    public static function changeLimit(string $limit): self
+    {
+        return new self(sprintf('Аппарат выдает сдачу не больше %s', $limit));
+    }
+
     public static function cannotMakeChange(string $amount): self
     {
         return new self(sprintf('В аппарате не хватает монет, чтобы выдать %s', $amount));

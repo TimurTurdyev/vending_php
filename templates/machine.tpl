@@ -33,6 +33,8 @@ $action = $base . '/machines/' . $machine->id();
                     <div class="vm-display__credit"><?= $this->e($currency->format($credit)) ?></div>
                 </div>
 
+                <?= $this->render('machine/status.tpl', ['machine' => $machine]) ?>
+
                 <h2 class="h6">Ваш кошелек: <?= $this->e($currency->format($wallet->total())) ?></h2>
                 <div class="vm-coins mb-3">
                     <?php foreach ($machine->cash()->coins()->denominations() as $coin): ?>
