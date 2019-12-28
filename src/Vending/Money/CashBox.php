@@ -110,6 +110,26 @@ final class CashBox
         return false;
     }
 
+    public function collect(): Coins
+    {
+        if ($this->credit > 0) {
+            throw VendingException::creditInside();
+        }
+
+        $taken = [];
+
+        foreach ($this->coins as $value => $count) {
+            if ($count > $this->policy->keep()) {
+                $taken[$value] = $count - $this->policy->keep();
+            }
+        }
+
+        $taken = new Coins($taken);
+        $this->coins = $this->coins->subtract($taken);
+
+        return $taken;
+    }
+
     private function payOut(int $amount): Coins
     {
         $change = $this->changeMaker->make($amount, $this->coins);

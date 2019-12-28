@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use Vending\Catalog\Product;
 use Vending\Catalog\Slot;
 use Vending\Money\CashBox;
+use Vending\Money\Coins;
 use Vending\Money\Currency;
 use Vending\Sales\Journal;
 use Vending\Sales\Sale;
@@ -140,5 +141,15 @@ final class Machine
         $customer->receive($this->currency(), $change);
 
         return new Purchase(null, $change);
+    }
+
+    public function restock(string $code, ?int $quantity = null): int
+    {
+        return $this->slot($code)->restock($quantity);
+    }
+
+    public function collect(): Coins
+    {
+        return $this->cash->collect();
     }
 }

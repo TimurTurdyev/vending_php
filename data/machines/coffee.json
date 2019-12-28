@@ -15,7 +15,8 @@
       "1000": 100
     },
     "max_change": 10000,
-    "reserve": 10
+    "reserve": 10,
+    "keep": 30
   },
   "catalog": [
     {

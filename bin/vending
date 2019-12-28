@@ -3,11 +3,13 @@
 declare(strict_types=1);
 
 use App\Console\BuyCommand;
+use App\Console\CollectCommand;
 use App\Console\Defaults;
 use App\Console\InsertCommand;
 use App\Console\MachinesCommand;
 use App\Console\RefundCommand;
 use App\Console\ResetCommand;
+use App\Console\RestockCommand;
 use App\Console\ShellCommand;
 use App\Console\StatusCommand;
 use Framework\Console\Application;
@@ -32,6 +34,8 @@ $commands = [
     InsertCommand::class,
     BuyCommand::class,
     RefundCommand::class,
+    RestockCommand::class,
+    CollectCommand::class,
     ResetCommand::class,
 ];
 

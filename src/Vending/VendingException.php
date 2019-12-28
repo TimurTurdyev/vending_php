@@ -43,6 +43,11 @@ final class VendingException extends DomainException
         return new self(sprintf('В кошельке нет монет %s', $coin));
     }
 
+    public static function creditInside(): self
+    {
+        return new self('В аппарате внесены деньги покупателя, сначала их нужно вернуть');
+    }
+
     public static function unknownSlot(string $code): self
     {
         return new self(sprintf('Ячейки %s нет', $code));

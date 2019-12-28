@@ -81,4 +81,17 @@ final class Slot
 
         $this->quantity--;
     }
+
+    // null - заполнить до конца
+    public function restock(?int $quantity = null): int
+    {
+        if ($this->sku === null) {
+            throw VendingException::emptySlot($this->code);
+        }
+
+        $added = min($quantity ?? $this->capacity, $this->capacity - $this->quantity);
+        $this->quantity += max(0, $added);
+
+        return max(0, $added);
+    }
 }

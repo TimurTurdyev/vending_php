@@ -58,4 +58,12 @@ final class MachineTest extends VendingTestCase
         $this->insert($exact, $customer, [1000, 200, 100]);
         $this->assertTrue($exact->buy($customer, 'A1', $this->time('12:00'))->change()->isEmpty());
     }
+
+    public function testCollectLeavesCoinsForChange(): void
+    {
+        $machine = $this->machine(['cash' => ['coins' => [100 => 10, 200 => 10, 500 => 3, 1000 => 50], 'keep' => 5]]);
+
+        $this->assertSame([1000 => 45, 200 => 5, 100 => 5], array_filter($machine->collect()->toArray()));
+        $this->assertSame([1000 => 5, 500 => 3, 200 => 5, 100 => 5], $machine->cash()->coins()->toArray());
+    }
 }
