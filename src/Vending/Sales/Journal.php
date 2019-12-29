@@ -23,4 +23,9 @@ final class Journal
     {
         return $this->sales;
     }
+
+    public function report(): Report
+    {
+        return new Report($this->sales);
+    }
 }
