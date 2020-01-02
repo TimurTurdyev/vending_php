@@ -26,8 +26,20 @@ final class MachineController extends Controller
     public function show(Request $request): Response
     {
         $world = $this->world();
+        $machine = $this->machine($world, $request);
+        $customer = $world->customer($this->customerId());
+        $now = $this->clock->now();
 
-        return $this->page($request, $world, 'machine.tpl', ['machine' => $this->machine($world, $request)]);
+        $quotes = [];
+
+        foreach ($machine->slots() as $code => $slot) {
+            $quotes[$code] = $machine->quote($slot, $customer, $now);
+        }
+
+        return $this->page($request, $world, 'machine.tpl', [
+            'machine' => $machine,
+            'quotes' => $quotes,
+        ]);
     }
 
     public function insert(Request $request): Response
@@ -95,10 +107,12 @@ final class MachineController extends Controller
         }
 
         $product = $purchase->product();
+        $quote = $purchase->quote();
 
         return [
             'product' => $product ? $product->name() : null,
-            'price' => $product ? $currency->format($product->price()) : null,
+            'price' => $quote ? $currency->format($quote->price()) : null,
+            'labels' => $quote ? $quote->labels() : [],
             'change' => $change,
             'total' => $currency->format($purchase->change()->total()),
         ];

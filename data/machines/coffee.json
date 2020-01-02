@@ -87,5 +87,17 @@
       "sku": null,
       "quantity": 0
     }
+  ],
+  "rules": [
+    {
+      "id": "morning",
+      "type": "happy_hours",
+      "label": "Утром горячие напитки -20%",
+      "from": "08:00",
+      "to": "10:00",
+      "percent": 20,
+      "category": "hot",
+      "enabled": true
+    }
   ]
 }

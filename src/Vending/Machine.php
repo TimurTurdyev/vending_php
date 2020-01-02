@@ -9,6 +9,9 @@ use Vending\Catalog\Slot;
 use Vending\Money\CashBox;
 use Vending\Money\Coins;
 use Vending\Money\Currency;
+use Vending\Rules\Quote;
+use Vending\Rules\RuleSet;
+use Vending\Rules\SaleContext;
 use Vending\Sales\Journal;
 use Vending\Sales\Sale;
 
@@ -26,6 +29,9 @@ final class Machine
     /** @var CashBox */
     private $cash;
 
+    /** @var RuleSet */
+    private $rules;
+
     /** @var Journal */
     private $journal;
 
@@ -34,6 +40,7 @@ final class Machine
         array $products,
         array $slots,
         CashBox $cash,
+        RuleSet $rules,
         Journal $journal
     ) {
         $this->info = $info;
@@ -47,6 +54,7 @@ final class Machine
         }
 
         $this->cash = $cash;
+        $this->rules = $rules;
         $this->journal = $journal;
     }
 
@@ -68,6 +76,11 @@ final class Machine
     public function cash(): CashBox
     {
         return $this->cash;
+    }
+
+    public function rules(): RuleSet
+    {
+        return $this->rules;
     }
 
     public function journal(): Journal
@@ -107,6 +120,17 @@ final class Machine
         return $this->slots[$code];
     }
 
+    public function quote(Slot $slot, Customer $customer, DateTimeImmutable $now): ?Quote
+    {
+        if ($slot->sku() === null) {
+            return null;
+        }
+
+        $product = $this->product($slot->sku());
+
+        return $this->rules->quote($product, $this->context($product, $customer, $now));
+    }
+
     public function insert(Customer $customer, int $coin): void
     {
         if (!$this->cash->accepts($coin)) {
@@ -126,13 +150,16 @@ final class Machine
         }
 
         $product = $this->product($slot->sku());
-        $change = $this->cash->pay($product->price());
+        $context = $this->context($product, $customer, $now);
+
+        $quote = $this->rules->quote($product, $context);
+        $change = $this->cash->pay($quote->price());
         $slot->take();
 
-        $this->journal->record(new Sale($now, $customer->id(), $product->sku(), $product->name(), $product->price()));
+        $this->journal->record(new Sale($now, $customer->id(), $product->sku(), $product->name(), $quote->price()));
         $customer->receive($this->currency(), $change);
 
-        return new Purchase($product, $change);
+        return new Purchase($product, $quote, $change);
     }
 
     public function refund(Customer $customer): Purchase
@@ -140,7 +167,7 @@ final class Machine
         $change = $this->cash->refund();
         $customer->receive($this->currency(), $change);
 
-        return new Purchase(null, $change);
+        return new Purchase(null, null, $change);
     }
 
     public function restock(string $code, ?int $quantity = null): int
@@ -151,5 +178,14 @@ final class Machine
     public function collect(): Coins
     {
         return $this->cash->collect();
+    }
+
+    private function context(Product $product, Customer $customer, DateTimeImmutable $now): SaleContext
+    {
+        return new SaleContext(
+            $product,
+            $customer->id(),
+            $now
+        );
     }
 }

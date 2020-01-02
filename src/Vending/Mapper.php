@@ -10,6 +10,8 @@ use Vending\Money\CashPolicy;
 use Vending\Money\ChangeMaker;
 use Vending\Money\Coins;
 use Vending\Money\Currency;
+use Vending\Rules\RuleFactory;
+use Vending\Rules\RuleSet;
 use Vending\Sales\Journal;
 use Vending\Sales\Sale;
 
@@ -19,9 +21,13 @@ final class Mapper
     /** @var ChangeMaker */
     private $changeMaker;
 
-    public function __construct(ChangeMaker $changeMaker)
+    /** @var RuleFactory */
+    private $rules;
+
+    public function __construct(ChangeMaker $changeMaker, RuleFactory $rules)
     {
         $this->changeMaker = $changeMaker;
+        $this->rules = $rules;
     }
 
     public function machine(array $data): Machine
@@ -41,6 +47,7 @@ final class Mapper
                 $this->changeMaker,
                 CashPolicy::fromArray($data['cash'])
             ),
+            new RuleSet($data['rules'] ?? [], $this->rules),
             new Journal(array_map([Sale::class, 'fromArray'], $data['sales'] ?? []))
         );
     }
@@ -62,6 +69,7 @@ final class Mapper
             'slots' => array_values(array_map(function (Slot $slot) {
                 return $slot->toArray();
             }, $machine->slots())),
+            'rules' => $machine->rules()->toArray(),
             'sales' => array_map(function (Sale $sale) {
                 return $sale->toArray();
             }, $machine->journal()->all()),

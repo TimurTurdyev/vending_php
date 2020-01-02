@@ -18,6 +18,7 @@ $action = $base . '/machines/' . $machine->id();
             <?= $this->render('machine/slot.tpl', [
                 'slot' => $slot,
                 'product' => $slot->sku() !== null ? $machine->product($slot->sku()) : null,
+                'quote' => $quotes[$code],
                 'currency' => $currency,
                 'action' => $action,
             ]) ?>
@@ -56,5 +57,7 @@ $action = $base . '/machines/' . $machine->id();
         <?php if (!empty($flash['tray'])): ?>
         <?= $this->render('machine/tray.tpl', ['tray' => $flash['tray']]) ?>
         <?php endif; ?>
+
+        <?= $this->render('machine/rules.tpl', ['machine' => $machine]) ?>
     </div>
 </div>

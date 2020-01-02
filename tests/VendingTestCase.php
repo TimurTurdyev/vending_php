@@ -6,13 +6,14 @@ use Vending\Customer;
 use Vending\Machine;
 use Vending\Mapper;
 use Vending\Money\OptimalChange;
+use Vending\Rules\RuleFactory;
 
 abstract class VendingTestCase extends TestCase
 {
     // аппарат в формате data/machines/*.json, суммы в копейках
     protected function machine(array $overrides = []): Machine
     {
-        $mapper = new Mapper(new OptimalChange());
+        $mapper = new Mapper(new OptimalChange(), new RuleFactory());
 
         return $mapper->machine($overrides + [
             'id' => 'test',
@@ -27,6 +28,7 @@ abstract class VendingTestCase extends TestCase
                 ['code' => 'A1', 'capacity' => 10, 'sku' => 'tea', 'quantity' => 5],
                 ['code' => 'A2', 'capacity' => 10, 'sku' => 'juice', 'quantity' => 1],
             ],
+            'rules' => [],
         ]);
     }
 

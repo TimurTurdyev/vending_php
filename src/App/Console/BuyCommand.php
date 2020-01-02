@@ -27,7 +27,11 @@ final class BuyCommand extends WorldCommand
 
         $purchase = $machine->buy($this->customer($world), $this->argument($input, 0, 'buy A2'), $now);
 
-        $output->line(sprintf('Выдано: %s за %s', $purchase->product()->name(), $currency->format($purchase->product()->price())));
+        $output->line(sprintf('Выдано: %s за %s', $purchase->product()->name(), $currency->format($purchase->quote()->price())));
+
+        foreach ($purchase->quote()->labels() as $label) {
+            $output->line('  ' . $label);
+        }
 
         $output->line('Сдача: ' . $this->describe($purchase->change(), $currency));
     }

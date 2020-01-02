@@ -31,16 +31,30 @@ final class StatusCommand extends WorldCommand
         $rows = [];
 
         foreach ($machine->slots() as $slot) {
-            if ($slot->sku() === null) {
+            $quote = $machine->quote($slot, $customer, $now);
+
+            if ($quote === null) {
                 $rows[] = [$slot->code(), '-', '', ''];
                 continue;
             }
 
+            $price = $currency->format($quote->price());
+
+            if ($quote->changed()) {
+                $price .= ' (было ' . $currency->format($quote->base()) . ')';
+            }
+
             $product = $machine->product($slot->sku());
-            $rows[] = [$slot->code(), $product->name(), $currency->format($product->price()), $slot->quantity()];
+            $rows[] = [$slot->code(), $product->name(), $price, $slot->quantity()];
         }
 
         $output->table(['Ячейка', 'Товар', 'Цена', 'Осталось'], $rows);
+
+        foreach ($machine->rules()->all() as $rule) {
+            if ($machine->rules()->enabled($rule->id())) {
+                $output->line('* ' . $rule->label());
+            }
+        }
 
         $output->line('Внесено: ' . $currency->format($machine->cash()->credit()));
 

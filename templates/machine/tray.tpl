@@ -5,6 +5,9 @@
         <p class="vm-tray__product mb-1"><?= $this->e($tray['product']) ?></p>
         <p class="small text-muted mb-2">
             Цена <?= $this->e($tray['price']) ?>
+            <?php foreach ($tray['labels'] as $label): ?>
+            <br><?= $this->e($label) ?>
+            <?php endforeach; ?>
         </p>
         <?php endif; ?>
         <?php if ($tray['change']): ?>
