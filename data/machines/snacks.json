@@ -81,5 +81,16 @@
       "sku": "soda",
       "quantity": 7
     }
+  ],
+  "rules": [
+    {
+      "id": "evening",
+      "type": "night_markup",
+      "label": "После 21:00 цены +10%",
+      "from": "21:00",
+      "to": "07:00",
+      "percent": 10,
+      "enabled": true
+    }
   ]
 }

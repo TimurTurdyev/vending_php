@@ -10,6 +10,7 @@ final class RuleFactory
     private const TYPES = [
         'happy_hours' => HappyHours::class,
         'every_nth_free' => EveryNthFree::class,
+        'night_markup' => NightMarkup::class,
     ];
 
     public function create(array $definition): Rule
