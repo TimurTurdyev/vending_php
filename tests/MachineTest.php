@@ -18,7 +18,7 @@ final class MachineTest extends VendingTestCase
         $this->assertSame(18000 - 1300, $customer->wallet($machine->currency())->total());
         $this->assertSame(0, $machine->cash()->credit());
         $this->assertSame(4, $machine->slot('A1')->quantity());
-        $this->assertCount(1, $machine->journal()->all());
+        $this->assertSame(1, $machine->journal()->soldCount('tea'));
     }
 
     public function testFailedPurchaseChangesNothing(): void

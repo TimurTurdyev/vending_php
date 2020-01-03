@@ -18,14 +18,19 @@ final class SaleContext
     /** @var DateTimeImmutable */
     private $time;
 
+    /** @var int сколько таких товаров аппарат уже продал */
+    private $sold;
+
     public function __construct(
         Product $product,
         string $customer,
-        DateTimeImmutable $time
+        DateTimeImmutable $time,
+        int $sold = 0
     ) {
         $this->product = $product;
         $this->customer = $customer;
         $this->time = $time;
+        $this->sold = $sold;
     }
 
     public function product(): Product
@@ -41,5 +46,10 @@ final class SaleContext
     public function time(): DateTimeImmutable
     {
         return $this->time;
+    }
+
+    public function sold(): int
+    {
+        return $this->sold;
     }
 }

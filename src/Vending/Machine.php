@@ -185,7 +185,8 @@ final class Machine
         return new SaleContext(
             $product,
             $customer->id(),
-            $now
+            $now,
+            $this->journal->soldCount($product->sku())
         );
     }
 }

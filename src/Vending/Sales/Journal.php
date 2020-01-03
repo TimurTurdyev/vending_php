@@ -24,6 +24,13 @@ final class Journal
         return $this->sales;
     }
 
+    public function soldCount(string $sku): int
+    {
+        return count(array_filter($this->sales, function (Sale $sale) use ($sku) {
+            return $sale->sku() === $sku;
+        }));
+    }
+
     public function report(): Report
     {
         return new Report($this->sales);
