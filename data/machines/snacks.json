@@ -84,6 +84,14 @@
   ],
   "rules": [
     {
+      "id": "hours",
+      "type": "working_hours",
+      "label": "Работает с 7 до 23",
+      "from": "07:00",
+      "to": "23:00",
+      "enabled": true
+    },
+    {
       "id": "evening",
       "type": "night_markup",
       "label": "После 21:00 цены +10%",

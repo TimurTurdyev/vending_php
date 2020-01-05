@@ -151,6 +151,7 @@ final class Machine
 
         $product = $this->product($slot->sku());
         $context = $this->context($product, $customer, $now);
+        $this->rules->check($context);
 
         $quote = $this->rules->quote($product, $context);
         $change = $this->cash->pay($quote->price());

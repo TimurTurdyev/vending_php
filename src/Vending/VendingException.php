@@ -72,4 +72,9 @@ final class VendingException extends DomainException
     {
         return new self(sprintf('Покупателя "%s" нет', $id));
     }
+
+    public static function closed(string $hours): self
+    {
+        return new self(sprintf('Аппарат работает %s', $hours));
+    }
 }

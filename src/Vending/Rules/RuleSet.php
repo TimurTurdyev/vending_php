@@ -34,6 +34,13 @@ final class RuleSet
         return !empty($this->definitions[$id]['enabled']);
     }
 
+    public function check(SaleContext $context): void
+    {
+        foreach ($this->active(Restriction::class) as $restriction) {
+            $restriction->check($context);
+        }
+    }
+
     public function quote(Product $product, SaleContext $context): Quote
     {
         $price = $product->price();
