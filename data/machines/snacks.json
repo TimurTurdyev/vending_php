@@ -99,6 +99,13 @@
       "to": "07:00",
       "percent": 10,
       "enabled": true
+    },
+    {
+      "id": "limit",
+      "type": "purchase_limit",
+      "label": "Не больше 5 покупок в день",
+      "per_day": 5,
+      "enabled": true
     }
   ]
 }

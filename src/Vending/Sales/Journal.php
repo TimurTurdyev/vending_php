@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Vending\Sales;
 
+use DateTimeImmutable;
+
 final class Journal
 {
     /** @var Sale[] */
@@ -28,6 +30,13 @@ final class Journal
     {
         return count(array_filter($this->sales, function (Sale $sale) use ($sku) {
             return $sale->sku() === $sku;
+        }));
+    }
+
+    public function customerCount(string $customer, DateTimeImmutable $day): int
+    {
+        return count(array_filter($this->sales, function (Sale $sale) use ($customer, $day) {
+            return $sale->customer() === $customer && $sale->day() === $day->format('Y-m-d');
         }));
     }
 

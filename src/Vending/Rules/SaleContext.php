@@ -21,16 +21,21 @@ final class SaleContext
     /** @var int сколько таких товаров аппарат уже продал */
     private $sold;
 
+    /** @var int сколько покупок сделал этот покупатель сегодня */
+    private $customerToday;
+
     public function __construct(
         Product $product,
         string $customer,
         DateTimeImmutable $time,
-        int $sold = 0
+        int $sold = 0,
+        int $customerToday = 0
     ) {
         $this->product = $product;
         $this->customer = $customer;
         $this->time = $time;
         $this->sold = $sold;
+        $this->customerToday = $customerToday;
     }
 
     public function product(): Product
@@ -51,5 +56,10 @@ final class SaleContext
     public function sold(): int
     {
         return $this->sold;
+    }
+
+    public function customerToday(): int
+    {
+        return $this->customerToday;
     }
 }

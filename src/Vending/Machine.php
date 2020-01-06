@@ -187,7 +187,8 @@ final class Machine
             $product,
             $customer->id(),
             $now,
-            $this->journal->soldCount($product->sku())
+            $this->journal->soldCount($product->sku()),
+            $this->journal->customerCount($customer->id(), $now)
         );
     }
 }

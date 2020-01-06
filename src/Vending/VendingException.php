@@ -77,4 +77,9 @@ final class VendingException extends DomainException
     {
         return new self(sprintf('Аппарат работает %s', $hours));
     }
+
+    public static function limitReached(int $perDay): self
+    {
+        return new self(sprintf('Не больше %d покупок в день на покупателя', $perDay));
+    }
 }

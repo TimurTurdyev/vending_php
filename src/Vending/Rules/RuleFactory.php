@@ -12,6 +12,7 @@ final class RuleFactory
         'every_nth_free' => EveryNthFree::class,
         'night_markup' => NightMarkup::class,
         'working_hours' => WorkingHours::class,
+        'purchase_limit' => PurchaseLimit::class,
     ];
 
     public function create(array $definition): Rule

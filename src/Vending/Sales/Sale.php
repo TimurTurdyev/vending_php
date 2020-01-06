@@ -52,6 +52,11 @@ final class Sale
         return $this->time;
     }
 
+    public function day(): string
+    {
+        return $this->time->format('Y-m-d');
+    }
+
     public function customer(): string
     {
         return $this->customer;
