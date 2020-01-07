@@ -48,6 +48,13 @@
       "name": "Газировка",
       "category": "drink",
       "price": 6000
+    },
+    {
+      "sku": "energy",
+      "name": "Энергетик",
+      "category": "drink",
+      "price": 8900,
+      "adult": true
     }
   ],
   "slots": [
@@ -80,6 +87,12 @@
       "capacity": 10,
       "sku": "soda",
       "quantity": 7
+    },
+    {
+      "code": "B3",
+      "capacity": 8,
+      "sku": "energy",
+      "quantity": 8
     }
   ],
   "rules": [
@@ -105,6 +118,12 @@
       "type": "purchase_limit",
       "label": "Не больше 5 покупок в день",
       "per_day": 5,
+      "enabled": true
+    },
+    {
+      "id": "adult",
+      "type": "age_check",
+      "label": "Энергетики только с 18 лет",
       "enabled": true
     }
   ]

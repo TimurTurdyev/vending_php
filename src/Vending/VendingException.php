@@ -82,4 +82,9 @@ final class VendingException extends DomainException
     {
         return new self(sprintf('Не больше %d покупок в день на покупателя', $perDay));
     }
+
+    public static function ageNotConfirmed(string $product): self
+    {
+        return new self(sprintf('%s продается только с 18 лет, подтвердите возраст', $product));
+    }
 }

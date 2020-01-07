@@ -17,7 +17,7 @@ final class BuyCommand extends WorldCommand
 
     public function description(): string
     {
-        return 'купить товар из ячейки: buy A2';
+        return 'купить товар из ячейки: buy A2, для 18+ добавить --confirm-age';
     }
 
     protected function handle(World $world, Input $input, Output $output, DateTimeImmutable $now): void
@@ -25,7 +25,12 @@ final class BuyCommand extends WorldCommand
         $machine = $this->machine($world, $input);
         $currency = $machine->currency();
 
-        $purchase = $machine->buy($this->customer($world), $this->argument($input, 0, 'buy A2'), $now);
+        $purchase = $machine->buy(
+            $this->customer($world),
+            $this->argument($input, 0, 'buy A2'),
+            $now,
+            (bool)$input->option('confirm-age', false)
+        );
 
         $output->line(sprintf('Выдано: %s за %s', $purchase->product()->name(), $currency->format($purchase->quote()->price())));
 

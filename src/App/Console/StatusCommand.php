@@ -45,7 +45,7 @@ final class StatusCommand extends WorldCommand
             }
 
             $product = $machine->product($slot->sku());
-            $rows[] = [$slot->code(), $product->name(), $price, $slot->quantity()];
+            $rows[] = [$slot->code(), $product->name() . ($product->adult() ? ' 18+' : ''), $price, $slot->quantity()];
         }
 
         $output->table(['Ячейка', 'Товар', 'Цена', 'Осталось'], $rows);

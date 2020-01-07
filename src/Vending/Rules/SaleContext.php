@@ -24,18 +24,23 @@ final class SaleContext
     /** @var int сколько покупок сделал этот покупатель сегодня */
     private $customerToday;
 
+    /** @var bool */
+    private $ageConfirmed;
+
     public function __construct(
         Product $product,
         string $customer,
         DateTimeImmutable $time,
         int $sold = 0,
-        int $customerToday = 0
+        int $customerToday = 0,
+        bool $ageConfirmed = false
     ) {
         $this->product = $product;
         $this->customer = $customer;
         $this->time = $time;
         $this->sold = $sold;
         $this->customerToday = $customerToday;
+        $this->ageConfirmed = $ageConfirmed;
     }
 
     public function product(): Product
@@ -61,5 +66,10 @@ final class SaleContext
     public function customerToday(): int
     {
         return $this->customerToday;
+    }
+
+    public function ageConfirmed(): bool
+    {
+        return $this->ageConfirmed;
     }
 }

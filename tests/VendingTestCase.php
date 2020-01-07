@@ -23,10 +23,12 @@ abstract class VendingTestCase extends TestCase
             'catalog' => [
                 ['sku' => 'tea', 'name' => 'Чай', 'category' => 'hot', 'price' => 1300],
                 ['sku' => 'juice', 'name' => 'Сок', 'category' => 'cold', 'price' => 3500],
+                ['sku' => 'energy', 'name' => 'Энергетик', 'category' => 'cold', 'price' => 8900, 'adult' => true],
             ],
             'slots' => [
                 ['code' => 'A1', 'capacity' => 10, 'sku' => 'tea', 'quantity' => 5],
                 ['code' => 'A2', 'capacity' => 10, 'sku' => 'juice', 'quantity' => 1],
+                ['code' => 'A3', 'capacity' => 10, 'sku' => 'energy', 'quantity' => 5],
             ],
             'rules' => [],
         ]);

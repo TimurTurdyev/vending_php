@@ -19,7 +19,10 @@ final class Product
     /** @var int */
     private $price;
 
-    public function __construct(string $sku, string $name, string $category, int $price)
+    /** @var bool */
+    private $adult;
+
+    public function __construct(string $sku, string $name, string $category, int $price, bool $adult = false)
     {
         if ($price <= 0) {
             throw new InvalidArgumentException(sprintf('У товара "%s" должна быть цена', $name));
@@ -29,6 +32,7 @@ final class Product
         $this->name = $name;
         $this->category = $category;
         $this->price = $price;
+        $this->adult = $adult;
     }
 
     public static function fromArray(array $data): self
@@ -37,7 +41,8 @@ final class Product
             (string)$data['sku'],
             (string)$data['name'],
             (string)($data['category'] ?? 'other'),
-            (int)$data['price']
+            (int)$data['price'],
+            (bool)($data['adult'] ?? false)
         );
     }
 
@@ -48,6 +53,7 @@ final class Product
             'name' => $this->name,
             'category' => $this->category,
             'price' => $this->price,
+            'adult' => $this->adult,
         ];
     }
 
@@ -69,5 +75,10 @@ final class Product
     public function price(): int
     {
         return $this->price;
+    }
+
+    public function adult(): bool
+    {
+        return $this->adult;
     }
 }

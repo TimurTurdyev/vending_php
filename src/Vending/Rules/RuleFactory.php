@@ -13,6 +13,7 @@ final class RuleFactory
         'night_markup' => NightMarkup::class,
         'working_hours' => WorkingHours::class,
         'purchase_limit' => PurchaseLimit::class,
+        'age_check' => AgeCheck::class,
     ];
 
     public function create(array $definition): Rule

@@ -141,7 +141,7 @@ final class Machine
         $this->cash->insert($coin);
     }
 
-    public function buy(Customer $customer, string $code, DateTimeImmutable $now): Purchase
+    public function buy(Customer $customer, string $code, DateTimeImmutable $now, bool $ageConfirmed = false): Purchase
     {
         $slot = $this->slot($code);
 
@@ -150,7 +150,7 @@ final class Machine
         }
 
         $product = $this->product($slot->sku());
-        $context = $this->context($product, $customer, $now);
+        $context = $this->context($product, $customer, $now, $ageConfirmed);
         $this->rules->check($context);
 
         $quote = $this->rules->quote($product, $context);
@@ -181,14 +181,15 @@ final class Machine
         return $this->cash->collect();
     }
 
-    private function context(Product $product, Customer $customer, DateTimeImmutable $now): SaleContext
+    private function context(Product $product, Customer $customer, DateTimeImmutable $now, bool $ageConfirmed = false): SaleContext
     {
         return new SaleContext(
             $product,
             $customer->id(),
             $now,
             $this->journal->soldCount($product->sku()),
-            $this->journal->customerCount($customer->id(), $now)
+            $this->journal->customerCount($customer->id(), $now),
+            $ageConfirmed
         );
     }
 }

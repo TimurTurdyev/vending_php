@@ -52,7 +52,7 @@ final class MachineController extends Controller
     public function buy(Request $request): Response
     {
         return $this->act($request, function (Machine $machine, Customer $customer, DateTimeImmutable $now) use ($request) {
-            return $machine->buy($customer, (string)$request->post('slot'), $now);
+            return $machine->buy($customer, (string)$request->post('slot'), $now, (bool)$request->post('confirm_age'));
         });
     }
 
