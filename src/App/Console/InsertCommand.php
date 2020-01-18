@@ -25,7 +25,7 @@ final class InsertCommand extends WorldCommand
         $this->argument($input, 0, 'insert 10 5 2');
 
         $machine = $this->machine($world, $input);
-        $customer = $this->customer($world);
+        $customer = $this->customer($world, $input);
 
         foreach ($input->arguments() as $coin) {
             $machine->insert($customer, $machine->currency()->parse($coin));

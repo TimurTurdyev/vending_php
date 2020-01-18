@@ -39,6 +39,7 @@ abstract class WorldCommand implements Command
     final public function run(Input $input, Output $output): int
     {
         try {
+            $this->world->ensureCustomer($this->customerId($input));
             $this->world->transaction(function (World $world) use ($input, $output) {
                 $this->handle($world, $input, $output, $this->clock->now());
             });
@@ -58,9 +59,9 @@ abstract class WorldCommand implements Command
         return $world->machine((string)$input->option('machine', $this->defaults->machine()));
     }
 
-    protected function customer(World $world): Customer
+    protected function customer(World $world, Input $input): Customer
     {
-        return $world->customer($this->defaults->customer());
+        return $world->customer($this->customerId($input));
     }
 
     protected function argument(Input $input, int $index, string $usage): string
@@ -85,5 +86,10 @@ abstract class WorldCommand implements Command
         }
 
         return $parts ? implode(', ', $parts) . ' = ' . $currency->format($coins->total()) : 'нет';
+    }
+
+    private function customerId(Input $input): string
+    {
+        return (string)$input->option('as', $this->defaults->customer());
     }
 }

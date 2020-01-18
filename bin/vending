@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Console\BuyCommand;
 use App\Console\CollectCommand;
+use App\Console\CustomersCommand;
 use App\Console\Defaults;
 use App\Console\InsertCommand;
 use App\Console\MachinesCommand;
@@ -35,6 +36,7 @@ $commands = [
     InsertCommand::class,
     BuyCommand::class,
     RefundCommand::class,
+    CustomersCommand::class,
     RestockCommand::class,
     CollectCommand::class,
     ReportCommand::class,

@@ -17,13 +17,13 @@ final class StatusCommand extends WorldCommand
 
     public function description(): string
     {
-        return 'витрина аппарата и ваш кошелек: status --machine=coffee';
+        return 'витрина аппарата и ваш кошелек: status --machine=coffee --as=ivan';
     }
 
     protected function handle(World $world, Input $input, Output $output, DateTimeImmutable $now): void
     {
         $machine = $this->machine($world, $input);
-        $customer = $this->customer($world);
+        $customer = $this->customer($world, $input);
         $currency = $machine->currency();
 
         $output->line(sprintf('%s (%s), покупатель: %s', $machine->info()->name(), $machine->info()->location(), $customer->name()));

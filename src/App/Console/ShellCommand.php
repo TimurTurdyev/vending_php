@@ -31,7 +31,7 @@ final class ShellCommand implements Command
 
     public function description(): string
     {
-        return 'интерактивный режим: shell --machine=snacks, выход - exit';
+        return 'интерактивный режим: shell --as=maria --machine=snacks, выход - exit';
     }
 
     public function run(Input $input, Output $output): int

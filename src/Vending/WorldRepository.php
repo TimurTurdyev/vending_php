@@ -40,6 +40,30 @@ final class WorldRepository
         });
     }
 
+    public function createGuest(): string
+    {
+        return $this->transaction(function (World $world) {
+            $id = 'guest-' . bin2hex(random_bytes(3));
+            $world->join($this->mapper->customer([
+                'id' => $id,
+                'name' => 'Гость ' . strtoupper(substr($id, 6)),
+                'wallets' => $this->fixtures->guestWallets(),
+            ]));
+
+            return $id;
+        });
+    }
+
+    // покупатель из консоли: --as=имя создает его с кошельком гостя
+    public function ensureCustomer(string $id): void
+    {
+        $this->transaction(function (World $world) use ($id) {
+            if (!$world->hasCustomer($id)) {
+                $world->join($this->mapper->customer(['id' => $id, 'name' => $id, 'wallets' => $this->fixtures->guestWallets()]));
+            }
+        });
+    }
+
     public function reset(): void
     {
         $this->file->delete();

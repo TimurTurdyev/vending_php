@@ -23,7 +23,7 @@ final class RefundCommand extends WorldCommand
     protected function handle(World $world, Input $input, Output $output, DateTimeImmutable $now): void
     {
         $machine = $this->machine($world, $input);
-        $purchase = $machine->refund($this->customer($world));
+        $purchase = $machine->refund($this->customer($world, $input));
 
         $output->line('Сдача: ' . $this->describe($purchase->change(), $machine->currency()));
     }

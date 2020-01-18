@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Http\CustomerController;
 use App\Http\MachineController;
 use Framework\Container;
 use Framework\Http\Kernel;
@@ -26,6 +27,8 @@ $router = (new Router())
     ->get('/machines/{id}', [MachineController::class, 'show'])
     ->post('/machines/{id}/insert', [MachineController::class, 'insert'])
     ->post('/machines/{id}/buy', [MachineController::class, 'buy'])
-    ->post('/machines/{id}/refund', [MachineController::class, 'refund']);
+    ->post('/machines/{id}/refund', [MachineController::class, 'refund'])
+    ->post('/customers/choose', [CustomerController::class, 'choose'])
+    ->post('/customers/new', [CustomerController::class, 'create']);
 
 (new Kernel($container, $router))->handle(Request::fromGlobals())->send();

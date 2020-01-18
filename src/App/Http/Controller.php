@@ -39,6 +39,7 @@ abstract class Controller
     {
         return new Response($this->view->render($template, $data + [
             'base' => $request->basePath(),
+            'path' => $request->path(),
             'flash' => $this->pullFlash(),
             'world' => $world,
             'customer' => $world->customer($this->customerId()),
@@ -50,15 +51,24 @@ abstract class Controller
         return Response::redirect($request->basePath() . $path);
     }
 
+    // мир для страницы: сначала гость, если он пришел впервые
     protected function world(): World
     {
+        $this->customerId();
+
         return $this->world->read();
     }
 
-    // у аппаратов пока один покупатель
     protected function customerId(): string
     {
-        return 'guest';
+        $id = $this->session->get('customer');
+
+        if (!is_string($id) || !$this->world->read()->hasCustomer($id)) {
+            $id = $this->world->createGuest();
+            $this->session->set('customer', $id);
+        }
+
+        return $id;
     }
 
     protected function flash(array $flash): void

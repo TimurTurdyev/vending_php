@@ -26,7 +26,7 @@ final class BuyCommand extends WorldCommand
         $currency = $machine->currency();
 
         $purchase = $machine->buy(
-            $this->customer($world),
+            $this->customer($world, $input),
             $this->argument($input, 0, 'buy A2'),
             $now,
             (bool)$input->option('confirm-age', false)

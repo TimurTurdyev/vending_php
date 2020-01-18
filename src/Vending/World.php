@@ -62,4 +62,9 @@ final class World
 
         return $this->customers[$id];
     }
+
+    public function join(Customer $customer): void
+    {
+        $this->customers[$customer->id()] = $customer;
+    }
 }

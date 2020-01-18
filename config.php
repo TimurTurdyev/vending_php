@@ -6,6 +6,6 @@ return [
     'timezone' => 'Europe/Moscow',
     // optimal - наименьшее число монет с учетом запаса, greedy - самые крупные монеты по очереди
     'change' => 'optimal',
-    // покупатель и аппарат консоли, если не указан --machine
-    'cli' => ['customer' => 'guest', 'machine' => 'coffee'],
+    // покупатель и аппарат консоли, если не указаны --as и --machine
+    'cli' => ['customer' => 'ivan', 'machine' => 'coffee'],
 ];
