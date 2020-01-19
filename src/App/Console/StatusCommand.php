@@ -56,7 +56,11 @@ final class StatusCommand extends WorldCommand
             }
         }
 
-        $output->line('Внесено: ' . $currency->format($machine->cash()->credit()));
+        if ($machine->busyFor($customer)) {
+            $output->line('Аппаратом пользуется другой покупатель');
+        } else {
+            $output->line('Внесено: ' . $currency->format($machine->cash()->credit()));
+        }
 
         if ($machine->cash()->exactChangeOnly()) {
             $output->line('Мало мелочи: только без сдачи');

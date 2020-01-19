@@ -32,6 +32,8 @@ final class Mapper
 
     public function machine(array $data): Machine
     {
+        $occupancy = $data['occupancy'] ?? null;
+
         return new Machine(
             new MachineInfo(
                 $data['id'],
@@ -48,7 +50,8 @@ final class Mapper
                 CashPolicy::fromArray($data['cash'])
             ),
             new RuleSet($data['rules'] ?? [], $this->rules),
-            new Journal(array_map([Sale::class, 'fromArray'], $data['sales'] ?? []))
+            new Journal(array_map([Sale::class, 'fromArray'], $data['sales'] ?? [])),
+            $occupancy ? new Occupancy($occupancy['customer']) : null
         );
     }
 
@@ -56,6 +59,7 @@ final class Mapper
     {
         $info = $machine->info();
         $cash = $machine->cash();
+        $occupancy = $machine->occupancy();
 
         return [
             'id' => $info->id(),
@@ -73,6 +77,7 @@ final class Mapper
             'sales' => array_map(function (Sale $sale) {
                 return $sale->toArray();
             }, $machine->journal()->all()),
+            'occupancy' => $occupancy ? ['customer' => $occupancy->customer()] : null,
         ];
     }
 

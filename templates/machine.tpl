@@ -31,16 +31,16 @@ $action = $base . '/machines/' . $machine->id();
             <div class="card-body">
                 <div class="vm-display mb-3">
                     <div class="small">Внесено</div>
-                    <div class="vm-display__credit"><?= $this->e($currency->format($credit)) ?></div>
+                    <div class="vm-display__credit"><?= $this->e($busy ? '---' : $currency->format($credit)) ?></div>
                 </div>
 
-                <?= $this->render('machine/status.tpl', ['machine' => $machine]) ?>
+                <?= $this->render('machine/status.tpl', ['machine' => $machine, 'busy' => $busy]) ?>
 
                 <h2 class="h6">Ваш кошелек: <?= $this->e($currency->format($wallet->total())) ?></h2>
                 <div class="vm-coins mb-3">
                     <?php foreach ($machine->cash()->coins()->denominations() as $coin): ?>
                     <form method="post" action="<?= $this->e($action) ?>/insert">
-                        <button type="submit" name="coin" value="<?= $coin ?>" class="btn btn-outline-secondary btn-sm vm-coin"<?= $wallet->of($coin) ? '' : ' disabled' ?>>
+                        <button type="submit" name="coin" value="<?= $coin ?>" class="btn btn-outline-secondary btn-sm vm-coin"<?= $wallet->of($coin) && !$busy ? '' : ' disabled' ?>>
                             <span class="vm-coin__value"><?= $this->e($currency->format($coin)) ?></span>
                             <span class="vm-coin__count">x <?= $wallet->of($coin) ?></span>
                         </button>
@@ -49,7 +49,7 @@ $action = $base . '/machines/' . $machine->id();
                 </div>
 
                 <form method="post" action="<?= $this->e($action) ?>/refund">
-                    <button type="submit" class="btn btn-outline-secondary btn-block"<?= $credit ? '' : ' disabled' ?>>Сдача</button>
+                    <button type="submit" class="btn btn-outline-secondary btn-block"<?= $credit && !$busy ? '' : ' disabled' ?>>Сдача</button>
                 </form>
             </div>
         </div>

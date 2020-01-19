@@ -87,4 +87,9 @@ final class VendingException extends DomainException
     {
         return new self(sprintf('%s продается только с 18 лет, подтвердите возраст', $product));
     }
+
+    public static function busy(): self
+    {
+        return new self('Аппаратом пользуется другой покупатель, подождите');
+    }
 }

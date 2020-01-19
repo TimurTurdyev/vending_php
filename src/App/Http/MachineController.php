@@ -39,6 +39,7 @@ final class MachineController extends Controller
         return $this->page($request, $world, 'machine.tpl', [
             'machine' => $machine,
             'quotes' => $quotes,
+            'busy' => $machine->busyFor($customer),
         ]);
     }
 

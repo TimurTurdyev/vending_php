@@ -35,13 +35,17 @@ final class Machine
     /** @var Journal */
     private $journal;
 
+    /** @var Occupancy|null */
+    private $occupancy;
+
     public function __construct(
         MachineInfo $info,
         array $products,
         array $slots,
         CashBox $cash,
         RuleSet $rules,
-        Journal $journal
+        Journal $journal,
+        ?Occupancy $occupancy = null
     ) {
         $this->info = $info;
 
@@ -56,6 +60,7 @@ final class Machine
         $this->cash = $cash;
         $this->rules = $rules;
         $this->journal = $journal;
+        $this->occupancy = $occupancy;
     }
 
     public function id(): string
@@ -86,6 +91,11 @@ final class Machine
     public function journal(): Journal
     {
         return $this->journal;
+    }
+
+    public function occupancy(): ?Occupancy
+    {
+        return $this->occupancy;
     }
 
     /** @return Product[] */
@@ -131,18 +141,28 @@ final class Machine
         return $this->rules->quote($product, $this->context($product, $customer, $now));
     }
 
+    public function busyFor(Customer $customer): bool
+    {
+        return $this->occupancy !== null && $this->occupancy->customer() !== $customer->id();
+    }
+
     public function insert(Customer $customer, int $coin): void
     {
+        $this->assertFree($customer);
+
         if (!$this->cash->accepts($coin)) {
             throw VendingException::unknownCoin($this->currency()->format($coin));
         }
 
         $customer->spend($this->currency(), $coin);
         $this->cash->insert($coin);
+        $this->occupancy = new Occupancy($customer->id());
     }
 
     public function buy(Customer $customer, string $code, DateTimeImmutable $now, bool $ageConfirmed = false): Purchase
     {
+        $this->assertFree($customer);
+
         $slot = $this->slot($code);
 
         if (!$slot->inStock()) {
@@ -159,14 +179,18 @@ final class Machine
 
         $this->journal->record(new Sale($now, $customer->id(), $product->sku(), $product->name(), $quote->price()));
         $customer->receive($this->currency(), $change);
+        $this->occupancy = null;
 
         return new Purchase($product, $quote, $change);
     }
 
     public function refund(Customer $customer): Purchase
     {
+        $this->assertFree($customer);
+
         $change = $this->cash->refund();
         $customer->receive($this->currency(), $change);
+        $this->occupancy = null;
 
         return new Purchase(null, null, $change);
     }
@@ -179,6 +203,13 @@ final class Machine
     public function collect(): Coins
     {
         return $this->cash->collect();
+    }
+
+    private function assertFree(Customer $customer): void
+    {
+        if ($this->busyFor($customer)) {
+            throw VendingException::busy();
+        }
     }
 
     private function context(Product $product, Customer $customer, DateTimeImmutable $now, bool $ageConfirmed = false): SaleContext

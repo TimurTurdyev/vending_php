@@ -22,6 +22,7 @@ final class MachinesCommand extends WorldCommand
 
     protected function handle(World $world, Input $input, Output $output, DateTimeImmutable $now): void
     {
+        $customer = $this->customer($world, $input);
         $rows = [];
 
         foreach ($world->machines() as $machine) {
@@ -30,9 +31,10 @@ final class MachinesCommand extends WorldCommand
                 $machine->info()->name(),
                 $machine->info()->location(),
                 $machine->currency()->code(),
+                $machine->busyFor($customer) ? 'занят' : 'свободен',
             ];
         }
 
-        $output->table(['ID', 'Аппарат', 'Где стоит', 'Валюта'], $rows);
+        $output->table(['ID', 'Аппарат', 'Где стоит', 'Валюта', 'Сейчас'], $rows);
     }
 }
