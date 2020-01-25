@@ -14,11 +14,15 @@ final class MachineInfo
     /** @var string */
     private $location;
 
-    public function __construct(string $id, string $name, string $location = '')
+    /** @var int секунды, через которые брошенная сумма возвращается покупателю */
+    private $timeout;
+
+    public function __construct(string $id, string $name, string $location = '', int $timeout = 120)
     {
         $this->id = $id;
         $this->name = $name;
         $this->location = $location;
+        $this->timeout = $timeout;
     }
 
     public function id(): string
@@ -34,5 +38,10 @@ final class MachineInfo
     public function location(): string
     {
         return $this->location;
+    }
+
+    public function timeout(): int
+    {
+        return $this->timeout;
     }
 }

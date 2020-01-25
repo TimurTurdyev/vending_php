@@ -2,6 +2,7 @@
   "id": "coffee",
   "name": "Кофейный автомат",
   "location": "Офис, 3 этаж, у переговорной",
+  "occupancy_timeout": 120,
   "currency": {
     "code": "RUB",
     "symbol": "руб.",

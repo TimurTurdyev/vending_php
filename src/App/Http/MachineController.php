@@ -39,14 +39,15 @@ final class MachineController extends Controller
         return $this->page($request, $world, 'machine.tpl', [
             'machine' => $machine,
             'quotes' => $quotes,
-            'busy' => $machine->busyFor($customer),
+            'now' => $now,
+            'busy' => $machine->busyFor($customer, $now),
         ]);
     }
 
     public function insert(Request $request): Response
     {
         return $this->act($request, function (Machine $machine, Customer $customer, DateTimeImmutable $now) use ($request) {
-            $machine->insert($customer, (int)$request->post('coin'));
+            $machine->insert($customer, (int)$request->post('coin'), $now);
         });
     }
 
@@ -59,8 +60,8 @@ final class MachineController extends Controller
 
     public function refund(Request $request): Response
     {
-        return $this->act($request, function (Machine $machine, Customer $customer) {
-            return $machine->refund($customer);
+        return $this->act($request, function (Machine $machine, Customer $customer, DateTimeImmutable $now) {
+            return $machine->refund($customer, $now);
         });
     }
 

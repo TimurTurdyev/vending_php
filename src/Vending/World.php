@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Vending;
 
+use DateTimeImmutable;
+
 // все аппараты, покупатели и владельцы, которые видят и веб, и консоль
 final class World
 {
@@ -66,5 +68,16 @@ final class World
     public function join(Customer $customer): void
     {
         $this->customers[$customer->id()] = $customer;
+    }
+
+    public function releaseAbandoned(DateTimeImmutable $now): void
+    {
+        foreach ($this->machines as $machine) {
+            $customer = $machine->abandonedBy($now);
+
+            if ($customer !== null && $this->hasCustomer($customer)) {
+                $machine->giveBack($this->customer($customer));
+            }
+        }
     }
 }

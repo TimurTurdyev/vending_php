@@ -44,10 +44,10 @@ abstract class VendingTestCase extends TestCase
         return new DateTimeImmutable('2020-01-06 ' . $time, new DateTimeZone('Europe/Moscow'));
     }
 
-    protected function insert(Machine $machine, Customer $customer, array $coins): void
+    protected function insert(Machine $machine, Customer $customer, array $coins, string $time = '12:00'): void
     {
         foreach ($coins as $coin) {
-            $machine->insert($customer, $coin);
+            $machine->insert($customer, $coin, $this->time($time));
         }
     }
 }

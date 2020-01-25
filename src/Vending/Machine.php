@@ -141,14 +141,16 @@ final class Machine
         return $this->rules->quote($product, $this->context($product, $customer, $now));
     }
 
-    public function busyFor(Customer $customer): bool
+    public function busyFor(Customer $customer, DateTimeImmutable $now): bool
     {
-        return $this->occupancy !== null && $this->occupancy->customer() !== $customer->id();
+        return $this->occupancy !== null
+            && $this->occupancy->customer() !== $customer->id()
+            && $this->occupancy->secondsLeft($now, $this->info->timeout()) > 0;
     }
 
-    public function insert(Customer $customer, int $coin): void
+    public function insert(Customer $customer, int $coin, DateTimeImmutable $now): void
     {
-        $this->assertFree($customer);
+        $this->assertFree($customer, $now);
 
         if (!$this->cash->accepts($coin)) {
             throw VendingException::unknownCoin($this->currency()->format($coin));
@@ -156,12 +158,12 @@ final class Machine
 
         $customer->spend($this->currency(), $coin);
         $this->cash->insert($coin);
-        $this->occupancy = new Occupancy($customer->id());
+        $this->occupancy = new Occupancy($customer->id(), $now->getTimestamp());
     }
 
     public function buy(Customer $customer, string $code, DateTimeImmutable $now, bool $ageConfirmed = false): Purchase
     {
-        $this->assertFree($customer);
+        $this->assertFree($customer, $now);
 
         $slot = $this->slot($code);
 
@@ -184,10 +186,25 @@ final class Machine
         return new Purchase($product, $quote, $change);
     }
 
-    public function refund(Customer $customer): Purchase
+    public function refund(Customer $customer, DateTimeImmutable $now): Purchase
     {
-        $this->assertFree($customer);
+        $this->assertFree($customer, $now);
 
+        return $this->giveBack($customer);
+    }
+
+    // покупатель отошел и не вернулся: внесенное возвращается ему же
+    public function abandonedBy(DateTimeImmutable $now): ?string
+    {
+        if ($this->occupancy === null || $this->occupancy->secondsLeft($now, $this->info->timeout()) > 0) {
+            return null;
+        }
+
+        return $this->occupancy->customer();
+    }
+
+    public function giveBack(Customer $customer): Purchase
+    {
         $change = $this->cash->refund();
         $customer->receive($this->currency(), $change);
         $this->occupancy = null;
@@ -205,9 +222,9 @@ final class Machine
         return $this->cash->collect();
     }
 
-    private function assertFree(Customer $customer): void
+    private function assertFree(Customer $customer, DateTimeImmutable $now): void
     {
-        if ($this->busyFor($customer)) {
+        if ($this->busyFor($customer, $now)) {
             throw VendingException::busy();
         }
     }

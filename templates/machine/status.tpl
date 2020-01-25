@@ -1,6 +1,7 @@
 <?php if ($busy): ?>
 <div class="alert alert-warning small">
-    Аппаратом пользуется другой покупатель, подождите, пока он закончит.
+    Аппаратом пользуется другой покупатель. Освободится не позже чем через
+    <?= $machine->occupancy()->secondsLeft($now, $machine->info()->timeout()) ?> сек.
 </div>
 <?php endif; ?>
 <?php if ($machine->cash()->exactChangeOnly()): ?>

@@ -28,7 +28,7 @@ final class InsertCommand extends WorldCommand
         $customer = $this->customer($world, $input);
 
         foreach ($input->arguments() as $coin) {
-            $machine->insert($customer, $machine->currency()->parse($coin));
+            $machine->insert($customer, $machine->currency()->parse($coin), $now);
         }
 
         $output->line('Внесено: ' . $machine->currency()->format($machine->cash()->credit()));

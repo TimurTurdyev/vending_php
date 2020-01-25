@@ -11,7 +11,7 @@ final class RestrictionsTest extends VendingTestCase
             ['id' => 'hours', 'type' => 'working_hours', 'label' => 'С 7 до 23', 'from' => '07:00', 'to' => '23:00'],
         ]]);
         $customer = $this->customer();
-        $this->insert($machine, $customer, [1000, 500]);
+        $this->insert($machine, $customer, [1000, 500], '23:10');
 
         $this->expectExceptionMessage('Аппарат работает 07:00-23:00');
         $machine->buy($customer, 'A1', $this->time('23:10'));

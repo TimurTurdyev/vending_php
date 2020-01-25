@@ -38,7 +38,8 @@ final class Mapper
             new MachineInfo(
                 $data['id'],
                 $data['name'],
-                $data['location'] ?? ''
+                $data['location'] ?? '',
+                (int)($data['occupancy_timeout'] ?? 120)
             ),
             array_map([Product::class, 'fromArray'], $data['catalog']),
             array_map([Slot::class, 'fromArray'], $data['slots']),
@@ -51,7 +52,7 @@ final class Mapper
             ),
             new RuleSet($data['rules'] ?? [], $this->rules),
             new Journal(array_map([Sale::class, 'fromArray'], $data['sales'] ?? [])),
-            $occupancy ? new Occupancy($occupancy['customer']) : null
+            $occupancy ? new Occupancy($occupancy['customer'], (int)$occupancy['since']) : null
         );
     }
 
@@ -65,6 +66,7 @@ final class Mapper
             'id' => $info->id(),
             'name' => $info->name(),
             'location' => $info->location(),
+            'occupancy_timeout' => $info->timeout(),
             'currency' => $machine->currency()->toArray(),
             'cash' => ['coins' => $cash->coins()->toArray(), 'credit' => $cash->credit()] + $cash->policy()->toArray(),
             'catalog' => array_values(array_map(function (Product $product) {
@@ -77,7 +79,7 @@ final class Mapper
             'sales' => array_map(function (Sale $sale) {
                 return $sale->toArray();
             }, $machine->journal()->all()),
-            'occupancy' => $occupancy ? ['customer' => $occupancy->customer()] : null,
+            'occupancy' => $occupancy ? ['customer' => $occupancy->customer(), 'since' => $occupancy->since()] : null,
         ];
     }
 

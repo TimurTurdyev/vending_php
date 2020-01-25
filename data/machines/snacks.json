@@ -2,6 +2,7 @@
   "id": "snacks",
   "name": "Снеки и напитки",
   "location": "Бизнес-центр, 1 этаж, у лифтов",
+  "occupancy_timeout": 90,
   "currency": {
     "code": "RUB",
     "symbol": "руб.",

@@ -31,7 +31,7 @@ final class MachinesCommand extends WorldCommand
                 $machine->info()->name(),
                 $machine->info()->location(),
                 $machine->currency()->code(),
-                $machine->busyFor($customer) ? 'занят' : 'свободен',
+                $machine->busyFor($customer, $now) ? 'занят' : 'свободен',
             ];
         }
 

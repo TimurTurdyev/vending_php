@@ -34,7 +34,7 @@ $action = $base . '/machines/' . $machine->id();
                     <div class="vm-display__credit"><?= $this->e($busy ? '---' : $currency->format($credit)) ?></div>
                 </div>
 
-                <?= $this->render('machine/status.tpl', ['machine' => $machine, 'busy' => $busy]) ?>
+                <?= $this->render('machine/status.tpl', ['machine' => $machine, 'busy' => $busy, 'now' => $now]) ?>
 
                 <h2 class="h6">Ваш кошелек: <?= $this->e($currency->format($wallet->total())) ?></h2>
                 <div class="vm-coins mb-3">

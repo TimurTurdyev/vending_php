@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Vending;
 
+use Framework\Clock\Clock;
 use Framework\Storage\JsonFile;
 
 final class WorldRepository
@@ -16,11 +17,15 @@ final class WorldRepository
     /** @var Mapper */
     private $mapper;
 
-    public function __construct(JsonFile $file, Fixtures $fixtures, Mapper $mapper)
+    /** @var Clock */
+    private $clock;
+
+    public function __construct(JsonFile $file, Fixtures $fixtures, Mapper $mapper, Clock $clock)
     {
         $this->file = $file;
         $this->fixtures = $fixtures;
         $this->mapper = $mapper;
+        $this->clock = $clock;
     }
 
     public function read(): World
@@ -33,6 +38,8 @@ final class WorldRepository
     {
         return $this->file->update(function (?array &$data) use ($action) {
             $world = $this->build($data ?? $this->initial());
+            $world->releaseAbandoned($this->clock->now());
+
             $result = $action($world);
             $data = $this->export($world);
 
