@@ -5,7 +5,7 @@ namespace Vending;
 
 use RuntimeException;
 
-// начальные данные из data/: аппараты, покупатели и кошелек нового гостя
+// начальные данные из data/: аппараты, покупатели, владельцы и кошелек нового гостя
 final class Fixtures
 {
     /** @var string */
@@ -37,6 +37,11 @@ final class Fixtures
     public function guestWallets(): array
     {
         return $this->read($this->directory . '/wallet.json');
+    }
+
+    public function operators(): array
+    {
+        return $this->read($this->directory . '/operators.json');
     }
 
     private function read(string $file): array

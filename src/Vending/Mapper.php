@@ -39,6 +39,7 @@ final class Mapper
                 $data['id'],
                 $data['name'],
                 $data['location'] ?? '',
+                $data['operator'] ?? null,
                 (int)($data['occupancy_timeout'] ?? 120)
             ),
             array_map([Product::class, 'fromArray'], $data['catalog']),
@@ -66,6 +67,7 @@ final class Mapper
             'id' => $info->id(),
             'name' => $info->name(),
             'location' => $info->location(),
+            'operator' => $info->operator(),
             'occupancy_timeout' => $info->timeout(),
             'currency' => $machine->currency()->toArray(),
             'cash' => ['coins' => $cash->coins()->toArray(), 'credit' => $cash->credit()] + $cash->policy()->toArray(),

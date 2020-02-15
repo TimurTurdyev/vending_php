@@ -14,7 +14,10 @@ final class World
     /** @var Customer[] */
     private $customers = [];
 
-    public function __construct(array $machines, array $customers)
+    /** @var Operator[] */
+    private $operators = [];
+
+    public function __construct(array $machines, array $customers, array $operators = [])
     {
         foreach ($machines as $machine) {
             $this->machines[$machine->id()] = $machine;
@@ -22,6 +25,10 @@ final class World
 
         foreach ($customers as $customer) {
             $this->customers[$customer->id()] = $customer;
+        }
+
+        foreach ($operators as $operator) {
+            $this->operators[$operator->id()] = $operator;
         }
     }
 
@@ -68,6 +75,11 @@ final class World
     public function join(Customer $customer): void
     {
         $this->customers[$customer->id()] = $customer;
+    }
+
+    public function operator(string $id): ?Operator
+    {
+        return $this->operators[$id] ?? null;
     }
 
     public function releaseAbandoned(DateTimeImmutable $now): void

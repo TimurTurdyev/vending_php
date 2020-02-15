@@ -15,6 +15,7 @@
         <?php if (isset($customer)): ?>
         <div class="d-flex flex-wrap align-items-center">
             <?= $this->render('partials/customer.tpl', ['base' => $base, 'path' => $path, 'world' => $world, 'customer' => $customer]) ?>
+            <?= $this->render('partials/operator.tpl', ['base' => $base, 'operator' => $operator]) ?>
         </div>
         <?php endif; ?>
     </div>

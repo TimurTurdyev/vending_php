@@ -91,7 +91,8 @@ final class WorldRepository
     {
         return new World(
             array_map([$this->mapper, 'machine'], $data['machines']),
-            array_map([$this->mapper, 'customer'], $data['customers'])
+            array_map([$this->mapper, 'customer'], $data['customers']),
+            array_map([Operator::class, 'fromArray'], $this->fixtures->operators())
         );
     }
 

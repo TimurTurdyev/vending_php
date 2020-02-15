@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use App\Http\CustomerController;
 use App\Http\MachineController;
+use App\Http\OperatorController;
 use Framework\Container;
 use Framework\Http\Kernel;
 use Framework\Http\Request;
@@ -29,6 +30,9 @@ $router = (new Router())
     ->post('/machines/{id}/buy', [MachineController::class, 'buy'])
     ->post('/machines/{id}/refund', [MachineController::class, 'refund'])
     ->post('/customers/choose', [CustomerController::class, 'choose'])
-    ->post('/customers/new', [CustomerController::class, 'create']);
+    ->post('/customers/new', [CustomerController::class, 'create'])
+    ->get('/operator/login', [OperatorController::class, 'loginForm'])
+    ->post('/operator/login', [OperatorController::class, 'login'])
+    ->post('/operator/logout', [OperatorController::class, 'logout']);
 
 (new Kernel($container, $router))->handle(Request::fromGlobals())->send();

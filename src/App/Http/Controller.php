@@ -37,12 +37,15 @@ abstract class Controller
 
     protected function page(Request $request, World $world, string $template, array $data = []): Response
     {
+        $operatorId = $this->operatorId();
+
         return new Response($this->view->render($template, $data + [
             'base' => $request->basePath(),
             'path' => $request->path(),
             'flash' => $this->pullFlash(),
             'world' => $world,
             'customer' => $world->customer($this->customerId()),
+            'operator' => $operatorId !== null ? $world->operator($operatorId) : null,
         ]));
     }
 
@@ -69,6 +72,13 @@ abstract class Controller
         }
 
         return $id;
+    }
+
+    protected function operatorId(): ?string
+    {
+        $id = $this->session->get('operator');
+
+        return is_string($id) ? $id : null;
     }
 
     protected function flash(array $flash): void

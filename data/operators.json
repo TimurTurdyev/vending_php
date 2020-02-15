@@ -1,0 +1,12 @@
+[
+  {
+    "id": "coffee-service",
+    "name": "Кофе-Сервис",
+    "password_hash": "$2y$10$jkM30hqIIhY4mOj/8Mqm/.nSZI7NQCYYV9ozVPugOOAI2gSV2k..."
+  },
+  {
+    "id": "snack-market",
+    "name": "Снек-Маркет",
+    "password_hash": "$2y$10$xp0tm6UgxdOgE8Y00.OsLOE/YitJbyjlXM74Cy.65IcD9HcAZu//u"
+  }
+]
