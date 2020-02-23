@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Vending;
 
-// владелец аппаратов, входит в панель по паролю
+// владелец аппаратов: обслуживает только те, где он указан оператором
 final class Operator
 {
     /** @var string */
@@ -40,5 +40,10 @@ final class Operator
     public function verify(string $password): bool
     {
         return password_verify($password, $this->passwordHash);
+    }
+
+    public function owns(Machine $machine): bool
+    {
+        return $machine->info()->operator() === $this->id;
     }
 }

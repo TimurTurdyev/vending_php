@@ -33,6 +33,7 @@ $router = (new Router())
     ->post('/customers/new', [CustomerController::class, 'create'])
     ->get('/operator/login', [OperatorController::class, 'loginForm'])
     ->post('/operator/login', [OperatorController::class, 'login'])
-    ->post('/operator/logout', [OperatorController::class, 'logout']);
+    ->post('/operator/logout', [OperatorController::class, 'logout'])
+    ->get('/operator', [OperatorController::class, 'dashboard']);
 
 (new Kernel($container, $router))->handle(Request::fromGlobals())->send();

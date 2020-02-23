@@ -13,6 +13,14 @@ final class Report
         $this->sales = $sales;
     }
 
+    // даты в формате Y-m-d, обе включительно
+    public function between(?string $from, ?string $to): self
+    {
+        return new self(array_values(array_filter($this->sales, function (Sale $sale) use ($from, $to) {
+            return ($from === null || $sale->day() >= $from) && ($to === null || $sale->day() <= $to);
+        })));
+    }
+
     public function count(): int
     {
         return count($this->sales);

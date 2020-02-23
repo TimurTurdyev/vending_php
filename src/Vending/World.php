@@ -82,6 +82,12 @@ final class World
         return $this->operators[$id] ?? null;
     }
 
+    /** @return Machine[] */
+    public function machinesOf(Operator $operator): array
+    {
+        return array_filter($this->machines, [$operator, 'owns']);
+    }
+
     public function releaseAbandoned(DateTimeImmutable $now): void
     {
         foreach ($this->machines as $machine) {

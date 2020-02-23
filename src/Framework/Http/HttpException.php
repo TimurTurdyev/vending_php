@@ -21,6 +21,11 @@ final class HttpException extends RuntimeException
         return new self(404, $message);
     }
 
+    public static function forbidden(string $message = 'Нет доступа'): self
+    {
+        return new self(403, $message);
+    }
+
     public function status(): int
     {
         return $this->status;
