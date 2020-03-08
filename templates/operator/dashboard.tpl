@@ -20,7 +20,7 @@
         ?>
         <tr>
             <td>
-                <?= $this->e($machine->info()->name()) ?>
+                <a href="<?= $this->e($base) ?>/operator/machines/<?= $this->e($machine->id()) ?>"><?= $this->e($machine->info()->name()) ?></a>
                 <div class="small text-muted"><?= $this->e($machine->info()->location()) ?></div>
             </td>
             <td class="text-right"><?= $this->e($currency->format($report->between($today, $today)->revenue())) ?></td>

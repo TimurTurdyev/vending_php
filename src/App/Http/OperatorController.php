@@ -6,7 +6,9 @@ namespace App\Http;
 use Framework\Http\HttpException;
 use Framework\Http\Request;
 use Framework\Http\Response;
+use Vending\Machine;
 use Vending\Operator;
+use Vending\VendingException;
 use Vending\World;
 
 final class OperatorController extends Controller
@@ -49,6 +51,47 @@ final class OperatorController extends Controller
         ]);
     }
 
+    public function machine(Request $request): Response
+    {
+        $world = $this->world();
+
+        return $this->page($request, $world, 'operator/machine.tpl', [
+            'machine' => $this->owned($world, $request),
+            'today' => $this->clock->now()->format('Y-m-d'),
+        ]);
+    }
+
+    public function restock(Request $request): Response
+    {
+        return $this->service($request, function (Machine $machine) use ($request) {
+            $slot = (string)$request->post('slot');
+            $added = $machine->restock($slot, $request->post('quantity') ? (int)$request->post('quantity') : null);
+
+            return sprintf('В ячейку %s добавлено %d шт.', $slot, $added);
+        });
+    }
+
+    public function collect(Request $request): Response
+    {
+        return $this->service($request, function (Machine $machine) {
+            return 'Выручка забрана: ' . $machine->currency()->format($machine->collect()->total());
+        });
+    }
+
+    private function service(Request $request, callable $action): Response
+    {
+        try {
+            $message = $this->world->transaction(function (World $world) use ($request, $action) {
+                return $action($this->owned($world, $request));
+            });
+            $this->flash(['success' => $message]);
+        } catch (VendingException $e) {
+            $this->flash(['error' => $e->getMessage()]);
+        }
+
+        return $this->redirect($request, '/operator/machines/' . $request->attribute('id'));
+    }
+
     private function operator(World $world): Operator
     {
         $operator = $this->operatorId() !== null ? $world->operator($this->operatorId()) : null;
@@ -58,5 +101,16 @@ final class OperatorController extends Controller
         }
 
         return $operator;
+    }
+
+    private function owned(World $world, Request $request): Machine
+    {
+        $id = (string)$request->attribute('id');
+
+        if (!$world->hasMachine($id) || !$this->operator($world)->owns($world->machine($id))) {
+            throw HttpException::notFound('Такого аппарата у вас нет');
+        }
+
+        return $world->machine($id);
     }
 }

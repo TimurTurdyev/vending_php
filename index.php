@@ -34,6 +34,9 @@ $router = (new Router())
     ->get('/operator/login', [OperatorController::class, 'loginForm'])
     ->post('/operator/login', [OperatorController::class, 'login'])
     ->post('/operator/logout', [OperatorController::class, 'logout'])
-    ->get('/operator', [OperatorController::class, 'dashboard']);
+    ->get('/operator', [OperatorController::class, 'dashboard'])
+    ->get('/operator/machines/{id}', [OperatorController::class, 'machine'])
+    ->post('/operator/machines/{id}/restock', [OperatorController::class, 'restock'])
+    ->post('/operator/machines/{id}/collect', [OperatorController::class, 'collect']);
 
 (new Kernel($container, $router))->handle(Request::fromGlobals())->send();
