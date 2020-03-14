@@ -58,6 +58,16 @@ final class VendingException extends DomainException
         return new self(sprintf('Ячейка %s пуста', $code));
     }
 
+    public static function overCapacity(string $code, int $capacity): self
+    {
+        return new self(sprintf('В ячейку %s помещается не больше %d шт.', $code, $capacity));
+    }
+
+    public static function unpayablePrice(string $coin): self
+    {
+        return new self(sprintf('Цена должна набираться монетами аппарата, самая мелкая - %s', $coin));
+    }
+
     public static function unknownProduct(string $sku): self
     {
         return new self(sprintf('Товара "%s" нет в каталоге аппарата', $sku));

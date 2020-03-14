@@ -7,7 +7,9 @@ use App\Console\CollectCommand;
 use App\Console\CustomersCommand;
 use App\Console\Defaults;
 use App\Console\InsertCommand;
+use App\Console\LoadCommand;
 use App\Console\MachinesCommand;
+use App\Console\PriceCommand;
 use App\Console\RefundCommand;
 use App\Console\ReportCommand;
 use App\Console\ResetCommand;
@@ -38,6 +40,8 @@ $commands = [
     RefundCommand::class,
     CustomersCommand::class,
     RestockCommand::class,
+    LoadCommand::class,
+    PriceCommand::class,
     CollectCommand::class,
     ReportCommand::class,
     ResetCommand::class,

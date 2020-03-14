@@ -62,3 +62,11 @@
 .vm-tray__product {
     font-weight: 700;
 }
+
+.vm-input-qty {
+    width: 70px;
+}
+
+.vm-input-price {
+    width: 90px;
+}

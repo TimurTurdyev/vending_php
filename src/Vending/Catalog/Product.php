@@ -81,4 +81,9 @@ final class Product
     {
         return $this->adult;
     }
+
+    public function withPrice(int $price): self
+    {
+        return new self($this->sku, $this->name, $this->category, $price, $this->adult);
+    }
 }

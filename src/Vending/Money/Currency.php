@@ -49,6 +49,15 @@ final class Currency
         return (int)$matches[1] * 10 ** $this->digits + (int)str_pad($matches[2] ?? '', $this->digits, '0');
     }
 
+    // для полей ввода: 1350 -> "13.50", 1300 -> "13"
+    public function plain(int $amount): string
+    {
+        $factor = 10 ** $this->digits;
+        $fraction = $amount % $factor;
+
+        return intdiv($amount, $factor) . ($fraction > 0 ? '.' . str_pad((string)$fraction, $this->digits, '0', STR_PAD_LEFT) : '');
+    }
+
     // 1350 -> "13,50 руб.", 1300 -> "13 руб."
     public function format(int $amount): string
     {

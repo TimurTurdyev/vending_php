@@ -94,4 +94,15 @@ final class Slot
 
         return max(0, $added);
     }
+
+    // другой товар: старый остаток оператор забирает
+    public function load(string $sku, int $quantity): void
+    {
+        if ($quantity < 0 || $quantity > $this->capacity) {
+            throw VendingException::overCapacity($this->code, $this->capacity);
+        }
+
+        $this->sku = $sku;
+        $this->quantity = $quantity;
+    }
 }

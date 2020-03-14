@@ -217,6 +217,22 @@ final class Machine
         return $this->slot($code)->restock($quantity);
     }
 
+    public function load(string $code, string $sku, int $quantity): void
+    {
+        $this->slot($code)->load($this->product($sku)->sku(), $quantity);
+    }
+
+    public function setPrice(string $sku, int $price): void
+    {
+        $coin = $this->cash->smallestCoin();
+
+        if ($price <= 0 || $price % $coin !== 0) {
+            throw VendingException::unpayablePrice($this->currency()->format($coin));
+        }
+
+        $this->products[$sku] = $this->product($sku)->withPrice($price);
+    }
+
     public function collect(): Coins
     {
         return $this->cash->collect();

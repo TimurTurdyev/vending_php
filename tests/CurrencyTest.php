@@ -32,5 +32,6 @@ final class CurrencyTest extends TestCase
         $this->assertSame('13,50 руб.', $rub->format(1350));
         $this->assertSame('1 278 руб.', $rub->format(127800));
         $this->assertSame('0,10 €', $eur->format(10));
+        $this->assertSame('13.05', $rub->plain(1305));
     }
 }

@@ -110,6 +110,13 @@ final class CashBox
         return false;
     }
 
+    public function smallestCoin(): int
+    {
+        $values = $this->coins->denominations();
+
+        return $values ? (int)end($values) : 1;
+    }
+
     public function collect(): Coins
     {
         if ($this->credit > 0) {

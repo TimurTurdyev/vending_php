@@ -6,6 +6,7 @@ namespace App\Http;
 use Framework\Http\HttpException;
 use Framework\Http\Request;
 use Framework\Http\Response;
+use InvalidArgumentException;
 use Vending\Machine;
 use Vending\Operator;
 use Vending\VendingException;
@@ -71,6 +72,27 @@ final class OperatorController extends Controller
         });
     }
 
+    public function load(Request $request): Response
+    {
+        return $this->service($request, function (Machine $machine) use ($request) {
+            $slot = (string)$request->post('slot');
+            $machine->load($slot, (string)$request->post('sku'), (int)$request->post('quantity'));
+
+            return sprintf('Ячейка %s загружена', $slot);
+        });
+    }
+
+    public function price(Request $request): Response
+    {
+        return $this->service($request, function (Machine $machine) use ($request) {
+            $product = $machine->product((string)$request->post('sku'));
+            $price = $machine->currency()->parse((string)$request->post('price'));
+            $machine->setPrice($product->sku(), $price);
+
+            return sprintf('%s теперь стоит %s', $product->name(), $machine->currency()->format($price));
+        });
+    }
+
     public function collect(Request $request): Response
     {
         return $this->service($request, function (Machine $machine) {
@@ -85,7 +107,7 @@ final class OperatorController extends Controller
                 return $action($this->owned($world, $request));
             });
             $this->flash(['success' => $message]);
-        } catch (VendingException $e) {
+        } catch (VendingException | InvalidArgumentException $e) {
             $this->flash(['error' => $e->getMessage()]);
         }
 
