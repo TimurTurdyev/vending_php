@@ -14,6 +14,7 @@ use App\Console\RefundCommand;
 use App\Console\ReportCommand;
 use App\Console\ResetCommand;
 use App\Console\RestockCommand;
+use App\Console\RulesCommand;
 use App\Console\ShellCommand;
 use App\Console\StatusCommand;
 use Framework\Console\Application;
@@ -42,6 +43,7 @@ $commands = [
     RestockCommand::class,
     LoadCommand::class,
     PriceCommand::class,
+    RulesCommand::class,
     CollectCommand::class,
     ReportCommand::class,
     ResetCommand::class,

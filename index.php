@@ -39,6 +39,7 @@ $router = (new Router())
     ->post('/operator/machines/{id}/restock', [OperatorController::class, 'restock'])
     ->post('/operator/machines/{id}/collect', [OperatorController::class, 'collect'])
     ->post('/operator/machines/{id}/load', [OperatorController::class, 'load'])
-    ->post('/operator/machines/{id}/price', [OperatorController::class, 'price']);
+    ->post('/operator/machines/{id}/price', [OperatorController::class, 'price'])
+    ->post('/operator/machines/{id}/rules', [OperatorController::class, 'rules']);
 
 (new Kernel($container, $router))->handle(Request::fromGlobals())->send();

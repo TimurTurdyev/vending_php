@@ -82,5 +82,20 @@ $action = $base . '/operator/machines/' . $machine->id();
                 </form>
             </div>
         </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="h5">Правила</h2>
+                <?php foreach ($machine->rules()->all() as $rule): ?>
+                <?php $enabled = $machine->rules()->enabled($rule->id()); ?>
+                <form method="post" action="<?= $this->e($action) ?>/rules" class="d-flex justify-content-between align-items-center mb-2">
+                    <input type="hidden" name="rule" value="<?= $this->e($rule->id()) ?>">
+                    <input type="hidden" name="enabled" value="<?= $enabled ? '' : '1' ?>">
+                    <span class="small<?= $enabled ? '' : ' text-muted' ?>"><?= $this->e($rule->label()) ?></span>
+                    <button type="submit" class="btn btn-sm <?= $enabled ? 'btn-outline-danger' : 'btn-outline-success' ?>"><?= $enabled ? 'Выключить' : 'Включить' ?></button>
+                </form>
+                <?php endforeach; ?>
+            </div>
+        </div>
     </div>
 </div>

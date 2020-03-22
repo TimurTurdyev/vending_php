@@ -93,6 +93,16 @@ final class OperatorController extends Controller
         });
     }
 
+    public function rules(Request $request): Response
+    {
+        return $this->service($request, function (Machine $machine) use ($request) {
+            $enabled = (bool)$request->post('enabled');
+            $machine->rules()->toggle((string)$request->post('rule'), $enabled);
+
+            return $enabled ? 'Правило включено' : 'Правило выключено';
+        });
+    }
+
     public function collect(Request $request): Response
     {
         return $this->service($request, function (Machine $machine) {

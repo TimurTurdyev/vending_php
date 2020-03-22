@@ -44,7 +44,7 @@ final class PriceRulesTest extends VendingTestCase
         $this->assertSame(1300, $machine->quote($machine->slot('A1'), $customer, $this->time('06:00'))->price());
     }
 
-    public function testRulesApplyInOrder(): void
+    public function testRulesApplyInOrderAndCanBeSwitchedOff(): void
     {
         $machine = $this->machine(['rules' => [
             ['id' => 'night', 'type' => 'night_markup', 'label' => 'Ночь', 'from' => '00:00', 'to' => '23:59', 'percent' => 100],
@@ -54,5 +54,8 @@ final class PriceRulesTest extends VendingTestCase
         $slot = $machine->slot('A1');
 
         $this->assertSame(1300, $machine->quote($slot, $customer, $this->time('12:00'))->price());
+
+        $machine->rules()->toggle('sale', false);
+        $this->assertSame(2600, $machine->quote($slot, $customer, $this->time('12:00'))->price());
     }
 }

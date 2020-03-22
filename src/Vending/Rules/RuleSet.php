@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Vending\Rules;
 
 use Vending\Catalog\Product;
+use Vending\VendingException;
 
 // программа аппарата: правила из настроек, оператор включает и выключает их
 final class RuleSet
@@ -32,6 +33,15 @@ final class RuleSet
     public function enabled(string $id): bool
     {
         return !empty($this->definitions[$id]['enabled']);
+    }
+
+    public function toggle(string $id, bool $enabled): void
+    {
+        if (!isset($this->rules[$id])) {
+            throw VendingException::unknownRule($id);
+        }
+
+        $this->definitions[$id]['enabled'] = $enabled;
     }
 
     public function check(SaleContext $context): void
