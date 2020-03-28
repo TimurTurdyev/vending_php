@@ -65,6 +65,25 @@ $action = $base . '/operator/machines/' . $machine->id();
                 </tbody>
             </table>
         </div>
+
+        <h2 class="h5">Последние продажи</h2>
+        <div class="table-responsive mb-4">
+            <table class="table table-sm bg-white">
+                <tbody>
+                <?php foreach ($machine->journal()->latest(20) as $sale): ?>
+                <tr>
+                    <td class="text-muted"><?= $this->e($sale->time()->format('d.m H:i')) ?></td>
+                    <td><?= $this->e($sale->name()) ?></td>
+                    <td><?= $this->e($world->hasCustomer($sale->customer()) ? $world->customer($sale->customer())->name() : $sale->customer()) ?></td>
+                    <td class="text-right"><?= $this->e($currency->format($sale->price())) ?></td>
+                </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php if (!$machine->journal()->all()): ?>
+            <p class="text-muted">Продаж пока нет</p>
+            <?php endif; ?>
+        </div>
     </div>
 
     <div class="col-lg-4">

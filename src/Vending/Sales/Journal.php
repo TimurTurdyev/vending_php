@@ -26,6 +26,12 @@ final class Journal
         return $this->sales;
     }
 
+    /** @return Sale[] последние продажи, новые сверху */
+    public function latest(int $limit): array
+    {
+        return array_reverse(array_slice($this->sales, -$limit));
+    }
+
     public function soldCount(string $sku): int
     {
         return count(array_filter($this->sales, function (Sale $sale) use ($sku) {
