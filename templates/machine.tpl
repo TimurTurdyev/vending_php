@@ -40,7 +40,7 @@ $action = $base . '/machines/' . $machine->id();
                 <div class="vm-coins mb-3">
                     <?php foreach ($machine->cash()->coins()->denominations() as $coin): ?>
                     <form method="post" action="<?= $this->e($action) ?>/insert">
-                        <button type="submit" name="coin" value="<?= $coin ?>" class="btn btn-outline-secondary btn-sm vm-coin"<?= $wallet->of($coin) && !$busy ? '' : ' disabled' ?>>
+                        <button type="submit" name="coin" value="<?= $coin ?>" class="vm-coin"<?= $wallet->of($coin) && !$busy ? '' : ' disabled' ?>>
                             <span class="vm-coin__value"><?= $this->e($currency->format($coin)) ?></span>
                             <span class="vm-coin__count">x <?= $wallet->of($coin) ?></span>
                         </button>
