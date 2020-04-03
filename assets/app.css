@@ -53,6 +53,12 @@ body {
     color: #d6336c;
 }
 
+.vm-slot__hint {
+    margin-top: 4px;
+    font-size: 12px;
+    color: #856404;
+}
+
 .vm-slot__buy {
     margin-top: auto;
     padding-top: 10px;

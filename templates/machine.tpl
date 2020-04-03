@@ -20,6 +20,7 @@ $action = $base . '/machines/' . $machine->id();
                 'product' => $slot->sku() !== null ? $machine->product($slot->sku()) : null,
                 'quote' => $quotes[$code],
                 'currency' => $currency,
+                'credit' => $credit,
                 'action' => $action,
             ]) ?>
             <?php endforeach; ?>

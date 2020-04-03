@@ -14,6 +14,9 @@
     <?php foreach ($quote->labels() as $label): ?>
     <div class="vm-slot__label"><?= $this->e($label) ?></div>
     <?php endforeach; ?>
+    <?php if ($slot->inStock() && $credit > 0 && $credit < $quote->price()): ?>
+    <div class="vm-slot__hint">Не хватает <?= $this->e($currency->format($quote->price() - $credit)) ?></div>
+    <?php endif; ?>
     <form method="post" action="<?= $this->e($action) ?>/buy" class="vm-slot__buy">
         <input type="hidden" name="slot" value="<?= $this->e($slot->code()) ?>">
         <?php if ($product->adult()): ?>
