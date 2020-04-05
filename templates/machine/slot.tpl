@@ -17,13 +17,10 @@
     <?php if ($slot->inStock() && $credit > 0 && $credit < $quote->price()): ?>
     <div class="vm-slot__hint">Не хватает <?= $this->e($currency->format($quote->price() - $credit)) ?></div>
     <?php endif; ?>
-    <form method="post" action="<?= $this->e($action) ?>/buy" class="vm-slot__buy">
+    <form method="post" action="<?= $this->e($action) ?>/buy" class="vm-slot__buy"<?= $product->adult() ? ' data-adult="' . $this->e($product->name()) . '"' : '' ?>>
         <input type="hidden" name="slot" value="<?= $this->e($slot->code()) ?>">
         <?php if ($product->adult()): ?>
-        <div class="custom-control custom-checkbox small mb-1">
-            <input type="checkbox" name="confirm_age" value="1" id="age-<?= $this->e($slot->code()) ?>" class="custom-control-input">
-            <label class="custom-control-label" for="age-<?= $this->e($slot->code()) ?>">Мне есть 18</label>
-        </div>
+        <input type="hidden" name="confirm_age" value="">
         <?php endif; ?>
         <button type="submit" class="btn btn-primary btn-sm btn-block"<?= $slot->inStock() ? '' : ' disabled' ?>><?= $slot->inStock() ? 'Купить' : 'Нет в наличии' ?></button>
     </form>

@@ -1,7 +1,7 @@
 <form method="post" action="<?= $this->e($base) ?>/customers/choose" class="form-inline my-1">
     <input type="hidden" name="back" value="<?= $this->e($path) ?>">
     <label class="text-light small mr-2" for="customer">Покупатель</label>
-    <select name="customer" id="customer" class="custom-select custom-select-sm" onchange="this.form.submit()">
+    <select name="customer" id="customer" class="custom-select custom-select-sm" data-autosubmit>
         <?php foreach ($world->customers() as $item): ?>
         <option value="<?= $this->e($item->id()) ?>"<?= $item->id() === $customer->id() ? ' selected' : '' ?>><?= $this->e($item->name()) ?></option>
         <?php endforeach; ?>
