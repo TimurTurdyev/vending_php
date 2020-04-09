@@ -160,3 +160,19 @@ body {
     width: 90px;
 }
 
+@media (max-width: 767px) {
+    .vm-showcase {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-gap: 8px;
+        padding: 10px;
+    }
+
+    .vm-slot {
+        padding: 10px 8px;
+    }
+
+    .vm-coin {
+        width: 56px;
+        height: 56px;
+    }
+}
