@@ -4,6 +4,7 @@
     <div class="col-md-6 col-lg-4">
         <h1 class="h4 mb-3">Вход для владельцев</h1>
         <form method="post" action="<?= $this->e($base) ?>/operator/login" class="card card-body">
+            <?= $this->render('partials/csrf.tpl', ['csrf' => $csrf]) ?>
             <div class="form-group">
                 <label for="login">Логин</label>
                 <input type="text" name="login" id="login" class="form-control" required autofocus>

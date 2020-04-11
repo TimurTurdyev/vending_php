@@ -22,6 +22,7 @@ $action = $base . '/machines/' . $machine->id();
                 'currency' => $currency,
                 'credit' => $credit,
                 'action' => $action,
+                'csrf' => $csrf,
             ]) ?>
             <?php endforeach; ?>
         </div>
@@ -41,6 +42,7 @@ $action = $base . '/machines/' . $machine->id();
                 <div class="vm-coins mb-3">
                     <?php foreach ($machine->cash()->coins()->denominations() as $coin): ?>
                     <form method="post" action="<?= $this->e($action) ?>/insert">
+                        <?= $this->render('partials/csrf.tpl', ['csrf' => $csrf]) ?>
                         <button type="submit" name="coin" value="<?= $coin ?>" class="vm-coin"<?= $wallet->of($coin) && !$busy ? '' : ' disabled' ?>>
                             <span class="vm-coin__value"><?= $this->e($currency->format($coin)) ?></span>
                             <span class="vm-coin__count">x <?= $wallet->of($coin) ?></span>
@@ -50,6 +52,7 @@ $action = $base . '/machines/' . $machine->id();
                 </div>
 
                 <form method="post" action="<?= $this->e($action) ?>/refund">
+                    <?= $this->render('partials/csrf.tpl', ['csrf' => $csrf]) ?>
                     <button type="submit" class="btn btn-outline-secondary btn-block"<?= $credit && !$busy ? '' : ' disabled' ?>>Сдача</button>
                 </form>
             </div>

@@ -14,8 +14,8 @@
         <a class="navbar-brand" href="<?= $this->e($base) ?>/">Vending</a>
         <?php if (isset($customer)): ?>
         <div class="d-flex flex-wrap align-items-center">
-            <?= $this->render('partials/customer.tpl', ['base' => $base, 'path' => $path, 'world' => $world, 'customer' => $customer]) ?>
-            <?= $this->render('partials/operator.tpl', ['base' => $base, 'operator' => $operator]) ?>
+            <?= $this->render('partials/customer.tpl', ['base' => $base, 'path' => $path, 'csrf' => $csrf, 'world' => $world, 'customer' => $customer]) ?>
+            <?= $this->render('partials/operator.tpl', ['base' => $base, 'csrf' => $csrf, 'operator' => $operator]) ?>
         </div>
         <?php endif; ?>
     </div>

@@ -5,6 +5,7 @@ use App\Http\CustomerController;
 use App\Http\MachineController;
 use App\Http\OperatorController;
 use Framework\Container;
+use Framework\Http\Csrf;
 use Framework\Http\Kernel;
 use Framework\Http\Request;
 use Framework\Http\Router;
@@ -42,4 +43,7 @@ $router = (new Router())
     ->post('/operator/machines/{id}/price', [OperatorController::class, 'price'])
     ->post('/operator/machines/{id}/rules', [OperatorController::class, 'rules']);
 
-(new Kernel($container, $router))->handle(Request::fromGlobals())->send();
+$kernel = (new Kernel($container, $router))
+    ->guard([$container->get(Csrf::class), 'check']);
+
+$kernel->handle(Request::fromGlobals())->send();

@@ -26,6 +26,11 @@ final class HttpException extends RuntimeException
         return new self(403, $message);
     }
 
+    public static function expired(): self
+    {
+        return new self(419, 'Страница устарела. Обновите ее и повторите действие');
+    }
+
     public function status(): int
     {
         return $this->status;

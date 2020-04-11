@@ -13,10 +13,21 @@ final class Kernel
     /** @var Router */
     private $router;
 
+    /** @var callable[] */
+    private $guards = [];
+
     public function __construct(Container $container, Router $router)
     {
         $this->container = $container;
         $this->router = $router;
+    }
+
+    // проверка перед любым контроллером, при отказе бросает HttpException
+    public function guard(callable $guard): self
+    {
+        $this->guards[] = $guard;
+
+        return $this;
     }
 
     public function handle(Request $request): Response
@@ -38,6 +49,10 @@ final class Kernel
 
         [[$controller, $action], $parameters] = $match;
         $request = $request->withAttributes($parameters);
+
+        foreach ($this->guards as $guard) {
+            $guard($request);
+        }
 
         return $this->container->get($controller)->$action($request);
     }

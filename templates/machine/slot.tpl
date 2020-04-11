@@ -18,6 +18,7 @@
     <div class="vm-slot__hint">Не хватает <?= $this->e($currency->format($quote->price() - $credit)) ?></div>
     <?php endif; ?>
     <form method="post" action="<?= $this->e($action) ?>/buy" class="vm-slot__buy"<?= $product->adult() ? ' data-adult="' . $this->e($product->name()) . '"' : '' ?>>
+        <?= $this->render('partials/csrf.tpl', ['csrf' => $csrf]) ?>
         <input type="hidden" name="slot" value="<?= $this->e($slot->code()) ?>">
         <?php if ($product->adult()): ?>
         <input type="hidden" name="confirm_age" value="">

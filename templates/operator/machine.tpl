@@ -3,6 +3,7 @@ $this->extend('layout.tpl', ['title' => $machine->info()->name()]);
 $currency = $machine->currency();
 $cash = $machine->cash();
 $action = $base . '/operator/machines/' . $machine->id();
+$csrfField = $this->render('partials/csrf.tpl', ['csrf' => $csrf]);
 ?>
 
 <p><a href="<?= $this->e($base) ?>/operator">&larr; Все аппараты</a></p>
@@ -24,12 +25,14 @@ $action = $base . '/operator/machines/' . $machine->id();
                     <td><?= $slot->quantity() ?> / <?= $slot->capacity() ?></td>
                     <td>
                         <form method="post" action="<?= $this->e($action) ?>/restock" class="form-inline">
+                            <?= $csrfField ?>
                             <input type="hidden" name="slot" value="<?= $this->e($slot->code()) ?>">
                             <button type="submit" class="btn btn-sm btn-outline-primary"<?= $slot->sku() === null || $slot->quantity() === $slot->capacity() ? ' disabled' : '' ?>>До полной</button>
                         </form>
                     </td>
                     <td>
                         <form method="post" action="<?= $this->e($action) ?>/load" class="form-inline flex-nowrap">
+                            <?= $csrfField ?>
                             <input type="hidden" name="slot" value="<?= $this->e($slot->code()) ?>">
                             <select name="sku" class="custom-select custom-select-sm mr-1">
                                 <?php foreach ($machine->products() as $product): ?>
@@ -55,6 +58,7 @@ $action = $base . '/operator/machines/' . $machine->id();
                     <td><?= $this->e($product->name()) ?><?php if ($product->adult()): ?> <span class="badge badge-danger">18+</span><?php endif; ?></td>
                     <td>
                         <form method="post" action="<?= $this->e($action) ?>/price" class="form-inline flex-nowrap">
+                            <?= $csrfField ?>
                             <input type="hidden" name="sku" value="<?= $this->e($product->sku()) ?>">
                             <input type="text" name="price" value="<?= $this->e($currency->plain($product->price())) ?>" class="form-control form-control-sm mr-1 vm-input-price">
                             <button type="submit" class="btn btn-sm btn-outline-secondary">Сохранить</button>
@@ -97,6 +101,7 @@ $action = $base . '/operator/machines/' . $machine->id();
                 </ul>
                 <p class="small text-muted">При инкассации остается по <?= $cash->policy()->keep() ?> монет каждого номинала</p>
                 <form method="post" action="<?= $this->e($action) ?>/collect">
+                    <?= $csrfField ?>
                     <button type="submit" class="btn btn-success btn-block">Забрать выручку</button>
                 </form>
             </div>
@@ -108,6 +113,7 @@ $action = $base . '/operator/machines/' . $machine->id();
                 <?php foreach ($machine->rules()->all() as $rule): ?>
                 <?php $enabled = $machine->rules()->enabled($rule->id()); ?>
                 <form method="post" action="<?= $this->e($action) ?>/rules" class="d-flex justify-content-between align-items-center mb-2">
+                    <?= $csrfField ?>
                     <input type="hidden" name="rule" value="<?= $this->e($rule->id()) ?>">
                     <input type="hidden" name="enabled" value="<?= $enabled ? '' : '1' ?>">
                     <span class="small<?= $enabled ? '' : ' text-muted' ?>"><?= $this->e($rule->label()) ?></span>
