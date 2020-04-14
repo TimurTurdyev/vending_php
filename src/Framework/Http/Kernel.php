@@ -16,6 +16,9 @@ final class Kernel
     /** @var callable[] */
     private $guards = [];
 
+    /** @var callable|null */
+    private $errorHandler;
+
     public function __construct(Container $container, Router $router)
     {
         $this->container = $container;
@@ -30,11 +33,22 @@ final class Kernel
         return $this;
     }
 
+    public function onError(callable $handler): self
+    {
+        $this->errorHandler = $handler;
+
+        return $this;
+    }
+
     public function handle(Request $request): Response
     {
         try {
             return $this->dispatch($request);
         } catch (HttpException $e) {
+            if ($this->errorHandler !== null) {
+                return ($this->errorHandler)($e, $request);
+            }
+
             return new Response($e->getMessage(), $e->status());
         }
     }

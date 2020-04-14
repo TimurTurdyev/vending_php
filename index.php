@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\Http\CustomerController;
+use App\Http\ErrorPage;
 use App\Http\MachineController;
 use App\Http\OperatorController;
 use Framework\Container;
@@ -44,6 +45,7 @@ $router = (new Router())
     ->post('/operator/machines/{id}/rules', [OperatorController::class, 'rules']);
 
 $kernel = (new Kernel($container, $router))
-    ->guard([$container->get(Csrf::class), 'check']);
+    ->guard([$container->get(Csrf::class), 'check'])
+    ->onError([$container->get(ErrorPage::class), 'render']);
 
 $kernel->handle(Request::fromGlobals())->send();
