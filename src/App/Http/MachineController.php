@@ -20,7 +20,7 @@ final class MachineController extends Controller
     {
         $world = $this->world();
 
-        return $this->page($request, $world, 'machines.tpl');
+        return $this->page($request, $world, 'machines.tpl', ['now' => $this->clock->now()]);
     }
 
     public function show(Request $request): Response
