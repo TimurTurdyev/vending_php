@@ -10,6 +10,7 @@
             <th class="text-right">Выручка сегодня</th>
             <th class="text-right">Всего продаж</th>
             <th class="text-right">В кассе</th>
+            <th>Внимание</th>
         </tr>
         </thead>
         <tbody>
@@ -17,6 +18,9 @@
         <?php
         $currency = $machine->currency();
         $report = $machine->journal()->report();
+        $empty = array_filter($machine->slots(), function ($slot) {
+            return $slot->sku() !== null && $slot->quantity() <= $slot->capacity() / 4;
+        });
         ?>
         <tr>
             <td>
@@ -26,6 +30,14 @@
             <td class="text-right"><?= $this->e($currency->format($report->between($today, $today)->revenue())) ?></td>
             <td class="text-right"><?= $report->count() ?></td>
             <td class="text-right"><?= $this->e($currency->format($machine->cash()->coins()->total())) ?></td>
+            <td>
+                <?php if ($empty): ?>
+                <span class="badge badge-warning">Пополнить: <?= $this->e(implode(', ', array_keys($empty))) ?></span>
+                <?php endif; ?>
+                <?php if ($machine->cash()->exactChangeOnly()): ?>
+                <span class="badge badge-info">Мало мелочи</span>
+                <?php endif; ?>
+            </td>
         </tr>
         <?php endforeach; ?>
         </tbody>

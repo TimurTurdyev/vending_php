@@ -22,7 +22,10 @@ $csrfField = $this->render('partials/csrf.tpl', ['csrf' => $csrf]);
                 <tr>
                     <td><?= $this->e($slot->code()) ?></td>
                     <td><?= $this->e($slot->sku() !== null ? $machine->product($slot->sku())->name() : '-') ?></td>
-                    <td><?= $slot->quantity() ?> / <?= $slot->capacity() ?></td>
+                    <td>
+                        <?= $slot->quantity() ?> / <?= $slot->capacity() ?>
+                        <div class="vm-stock"><div class="vm-stock__bar" style="width: <?= round($slot->quantity() / $slot->capacity() * 100) ?>%"></div></div>
+                    </td>
                     <td>
                         <form method="post" action="<?= $this->e($action) ?>/restock" class="form-inline">
                             <?= $csrfField ?>
@@ -96,7 +99,7 @@ $csrfField = $this->render('partials/csrf.tpl', ['csrf' => $csrf]);
                 <h2 class="h5">Касса: <?= $this->e($currency->format($cash->coins()->total())) ?></h2>
                 <ul class="list-unstyled small">
                     <?php foreach ($cash->coins() as $coin => $count): ?>
-                    <li><?= $this->e($currency->format($coin)) ?> x <?= $count ?></li>
+                    <li><?= $this->e($currency->format($coin)) ?> x <?= $count ?><?= $count < $cash->policy()->reserve() ? ' <span class="badge badge-info">мало</span>' : '' ?></li>
                     <?php endforeach; ?>
                 </ul>
                 <p class="small text-muted">При инкассации остается по <?= $cash->policy()->keep() ?> монет каждого номинала</p>

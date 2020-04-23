@@ -76,6 +76,19 @@ body {
     padding-top: 10px;
 }
 
+.vm-stock {
+    height: 4px;
+    margin-top: 8px;
+    border-radius: 2px;
+    background: #e3e6ea;
+}
+
+.vm-stock__bar {
+    height: 100%;
+    border-radius: 2px;
+    background: #28a745;
+}
+
 /* панель справа: табло, монетоприемник, лоток */
 .vm-panel {
     border: 0;

@@ -14,6 +14,9 @@
     <?php foreach ($quote->labels() as $label): ?>
     <div class="vm-slot__label"><?= $this->e($label) ?></div>
     <?php endforeach; ?>
+    <div class="vm-stock" title="Осталось <?= $slot->quantity() ?> из <?= $slot->capacity() ?>">
+        <div class="vm-stock__bar" style="width: <?= round($slot->quantity() / $slot->capacity() * 100) ?>%"></div>
+    </div>
     <?php if ($slot->inStock() && $credit > 0 && $credit < $quote->price()): ?>
     <div class="vm-slot__hint">Не хватает <?= $this->e($currency->format($quote->price() - $credit)) ?></div>
     <?php endif; ?>
