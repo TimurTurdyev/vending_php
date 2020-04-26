@@ -1,0 +1,99 @@
+{
+  "id": "airport",
+  "name": "Аэропорт",
+  "location": "Терминал B, зона вылета",
+  "operator": "snack-market",
+  "occupancy_timeout": 60,
+  "currency": {
+    "code": "EUR",
+    "symbol": "€",
+    "digits": 2
+  },
+  "cash": {
+    "coins": {
+      "10": 12,
+      "20": 40,
+      "50": 40,
+      "100": 30,
+      "200": 20
+    },
+    "max_change": 500,
+    "reserve": 15,
+    "keep": 15
+  },
+  "catalog": [
+    {
+      "sku": "water",
+      "name": "Вода",
+      "category": "drink",
+      "price": 250
+    },
+    {
+      "sku": "coffee",
+      "name": "Кофе",
+      "category": "hot",
+      "price": 350
+    },
+    {
+      "sku": "croissant",
+      "name": "Круассан",
+      "category": "snack",
+      "price": 290
+    },
+    {
+      "sku": "sandwich",
+      "name": "Сэндвич",
+      "category": "snack",
+      "price": 590
+    },
+    {
+      "sku": "chocolate",
+      "name": "Шоколад",
+      "category": "snack",
+      "price": 200
+    }
+  ],
+  "slots": [
+    {
+      "code": "A1",
+      "capacity": 10,
+      "sku": "water",
+      "quantity": 10
+    },
+    {
+      "code": "A2",
+      "capacity": 10,
+      "sku": "coffee",
+      "quantity": 8
+    },
+    {
+      "code": "B1",
+      "capacity": 8,
+      "sku": "croissant",
+      "quantity": 5
+    },
+    {
+      "code": "B2",
+      "capacity": 8,
+      "sku": "sandwich",
+      "quantity": 4
+    },
+    {
+      "code": "B3",
+      "capacity": 10,
+      "sku": "chocolate",
+      "quantity": 9
+    }
+  ],
+  "rules": [
+    {
+      "id": "night",
+      "type": "night_markup",
+      "label": "Ночной тариф +15%",
+      "from": "00:00",
+      "to": "05:00",
+      "percent": 15,
+      "enabled": true
+    }
+  ]
+}
