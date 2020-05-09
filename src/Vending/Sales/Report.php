@@ -41,6 +41,17 @@ final class Report
         });
     }
 
+    /** @return array[] день => [count, revenue] по порядку дней */
+    public function byDay(): array
+    {
+        $days = $this->group(function (Sale $sale) {
+            return $sale->day();
+        });
+        ksort($days);
+
+        return $days;
+    }
+
     private function group(callable $key): array
     {
         $groups = [];

@@ -17,14 +17,14 @@ final class ReportCommand extends WorldCommand
 
     public function description(): string
     {
-        return 'продажи аппарата по товарам';
+        return 'продажи аппарата: machine:report --from=2020-05-01 --to=2020-05-31';
     }
 
     protected function handle(World $world, Input $input, Output $output, DateTimeImmutable $now): void
     {
         $machine = $this->machine($world, $input);
         $currency = $machine->currency();
-        $report = $machine->journal()->report();
+        $report = $machine->journal()->report()->between($input->option('from'), $input->option('to'));
 
         $rows = [];
 
@@ -33,6 +33,16 @@ final class ReportCommand extends WorldCommand
         }
 
         $output->table(['Товар', 'Продано', 'Выручка'], $rows);
+
+        if ($input->option('days')) {
+            $rows = [];
+
+            foreach ($report->byDay() as $day => $row) {
+                $rows[] = [$day, $row['count'], $currency->format($row['revenue'])];
+            }
+
+            $output->table(['День', 'Продано', 'Выручка'], $rows);
+        }
 
         $output->line(sprintf('Всего: %d продаж на %s', $report->count(), $currency->format($report->revenue())));
     }
