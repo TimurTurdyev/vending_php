@@ -125,5 +125,10 @@ $csrfField = $this->render('partials/csrf.tpl', ['csrf' => $csrf]);
                 <?php endforeach; ?>
             </div>
         </div>
+
+        <form method="post" action="<?= $this->e($action) ?>/reset" data-confirm="Вернуть аппарат к настройкам из конфигурации? Журнал продаж будет очищен">
+            <?= $csrfField ?>
+            <button type="submit" class="btn btn-link text-muted btn-sm">Сбросить аппарат</button>
+        </form>
     </div>
 </div>

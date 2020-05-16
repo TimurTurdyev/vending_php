@@ -71,9 +71,19 @@ final class WorldRepository
         });
     }
 
-    public function reset(): void
+    // null - все аппараты и покупатели к начальным данным
+    public function reset(?string $machineId = null): void
     {
-        $this->file->delete();
+        if ($machineId === null) {
+            $this->file->delete();
+
+            return;
+        }
+
+        $this->transaction(function (World $world) use ($machineId) {
+            $world->machine($machineId);
+            $world->replace($this->mapper->machine($this->fixtures->machine($machineId)));
+        });
     }
 
     private function initial(): array

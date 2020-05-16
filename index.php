@@ -42,7 +42,8 @@ $router = (new Router())
     ->post('/operator/machines/{id}/collect', [OperatorController::class, 'collect'])
     ->post('/operator/machines/{id}/load', [OperatorController::class, 'load'])
     ->post('/operator/machines/{id}/price', [OperatorController::class, 'price'])
-    ->post('/operator/machines/{id}/rules', [OperatorController::class, 'rules']);
+    ->post('/operator/machines/{id}/rules', [OperatorController::class, 'rules'])
+    ->post('/operator/machines/{id}/reset', [OperatorController::class, 'reset']);
 
 $kernel = (new Kernel($container, $router))
     ->guard([$container->get(Csrf::class), 'check'])

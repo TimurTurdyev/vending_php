@@ -7,6 +7,12 @@
         this.form.submit();
     });
 
+    $('form[data-confirm]').on('submit', function (event) {
+        if (!window.confirm(this.getAttribute('data-confirm'))) {
+            event.preventDefault();
+        }
+    });
+
     // 18+: спрашиваем подтверждение и передаем его в форме покупки
     $('form[data-adult]').on('submit', function (event) {
         var field = this.querySelector('[name="confirm_age"]');

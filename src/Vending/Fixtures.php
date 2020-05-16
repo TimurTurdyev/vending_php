@@ -29,6 +29,17 @@ final class Fixtures
         return $machines;
     }
 
+    public function machine(string $id): array
+    {
+        $machines = $this->machines();
+
+        if (!isset($machines[$id])) {
+            throw VendingException::unknownMachine($id);
+        }
+
+        return $machines[$id];
+    }
+
     public function customers(): array
     {
         return $this->read($this->directory . '/customers.json');

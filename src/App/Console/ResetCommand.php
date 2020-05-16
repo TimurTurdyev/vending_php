@@ -6,6 +6,7 @@ namespace App\Console;
 use Framework\Console\Command;
 use Framework\Console\Input;
 use Framework\Console\Output;
+use Vending\VendingException;
 use Vending\WorldRepository;
 
 final class ResetCommand implements Command
@@ -25,13 +26,22 @@ final class ResetCommand implements Command
 
     public function description(): string
     {
-        return 'вернуть все аппараты и покупателей к начальным данным';
+        return 'начальные данные: reset coffee - один аппарат, reset - все и покупатели';
     }
 
     public function run(Input $input, Output $output): int
     {
-        $this->world->reset();
-        $output->line('Все аппараты и покупатели сброшены');
+        $machine = $input->argument(0);
+
+        try {
+            $this->world->reset($machine);
+        } catch (VendingException $e) {
+            $output->error($e->getMessage());
+
+            return 1;
+        }
+
+        $output->line($machine === null ? 'Все аппараты и покупатели сброшены' : sprintf('Аппарат %s сброшен', $machine));
 
         return 0;
     }

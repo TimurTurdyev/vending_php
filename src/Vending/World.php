@@ -52,6 +52,11 @@ final class World
         return $this->machines[$id];
     }
 
+    public function replace(Machine $machine): void
+    {
+        $this->machines[$machine->id()] = $machine;
+    }
+
     /** @return Customer[] */
     public function customers(): array
     {

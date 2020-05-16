@@ -110,6 +110,15 @@ final class OperatorController extends Controller
         });
     }
 
+    public function reset(Request $request): Response
+    {
+        $this->owned($this->world->read(), $request);
+        $this->world->reset((string)$request->attribute('id'));
+        $this->flash(['success' => 'Аппарат возвращен к настройкам из конфигурации']);
+
+        return $this->redirect($request, '/operator/machines/' . $request->attribute('id'));
+    }
+
     private function service(Request $request, callable $action): Response
     {
         try {
