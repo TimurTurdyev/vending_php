@@ -41,4 +41,15 @@ final class Quote
     {
         return $this->price !== $this->base;
     }
+
+    // скидка в процентах может дать сумму, которую нельзя набрать монетами
+    public function roundedTo(int $step): self
+    {
+        return new self(self::roundUp($this->base, $step), self::roundUp($this->price, $step), $this->labels);
+    }
+
+    private static function roundUp(int $amount, int $step): int
+    {
+        return (int)(ceil($amount / $step) * $step);
+    }
 }

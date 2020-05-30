@@ -10,7 +10,7 @@ final class PriceRulesTest extends VendingTestCase
         ]]);
         $customer = $this->customer();
 
-        $this->assertSame(650, $machine->quote($machine->slot('A1'), $customer, $this->time('08:00'))->price());
+        $this->assertSame(700, $machine->quote($machine->slot('A1'), $customer, $this->time('08:00'))->price());
         $this->assertSame(1300, $machine->quote($machine->slot('A1'), $customer, $this->time('10:00'))->price());
         $this->assertSame(3500, $machine->quote($machine->slot('A2'), $customer, $this->time('09:00'))->price());
         $this->assertSame(['Утро'], $machine->quote($machine->slot('A1'), $customer, $this->time('09:59'))->labels());
@@ -39,8 +39,8 @@ final class PriceRulesTest extends VendingTestCase
         ]]);
         $customer = $this->customer();
 
-        $this->assertSame(1430, $machine->quote($machine->slot('A1'), $customer, $this->time('23:30'))->price());
-        $this->assertSame(1430, $machine->quote($machine->slot('A1'), $customer, $this->time('05:59'))->price());
+        $this->assertSame(1500, $machine->quote($machine->slot('A1'), $customer, $this->time('23:30'))->price());
+        $this->assertSame(1500, $machine->quote($machine->slot('A1'), $customer, $this->time('05:59'))->price());
         $this->assertSame(1300, $machine->quote($machine->slot('A1'), $customer, $this->time('06:00'))->price());
     }
 

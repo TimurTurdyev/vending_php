@@ -138,7 +138,8 @@ final class Machine
 
         $product = $this->product($slot->sku());
 
-        return $this->rules->quote($product, $this->context($product, $customer, $now));
+        return $this->rules->quote($product, $this->context($product, $customer, $now))
+            ->roundedTo($this->cash->smallestCoin());
     }
 
     public function busyFor(Customer $customer, DateTimeImmutable $now): bool
@@ -175,7 +176,7 @@ final class Machine
         $context = $this->context($product, $customer, $now, $ageConfirmed);
         $this->rules->check($context);
 
-        $quote = $this->rules->quote($product, $context);
+        $quote = $this->rules->quote($product, $context)->roundedTo($this->cash->smallestCoin());
         $change = $this->cash->pay($quote->price());
         $slot->take();
 

@@ -59,6 +59,20 @@ final class MachineTest extends VendingTestCase
         $this->assertTrue($exact->buy($customer, 'A1', $this->time('12:00'))->change()->isEmpty());
     }
 
+    public function testDiscountIsRoundedUpToSmallestCoin(): void
+    {
+        $machine = $this->machine(['rules' => [
+            ['id' => 'morning', 'type' => 'happy_hours', 'label' => '-20%', 'from' => '08:00', 'to' => '10:00', 'percent' => 20],
+        ]]);
+        $customer = $this->customer();
+        $this->insert($machine, $customer, [1000, 100], '09:00');
+
+        $purchase = $machine->buy($customer, 'A1', $this->time('09:00'));
+
+        $this->assertSame(1100, $purchase->quote()->price());
+        $this->assertTrue($purchase->change()->isEmpty());
+    }
+
     public function testCollectLeavesCoinsForChange(): void
     {
         $machine = $this->machine(['cash' => ['coins' => [100 => 10, 200 => 10, 500 => 3, 1000 => 50], 'keep' => 5]]);
